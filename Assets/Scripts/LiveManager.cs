@@ -1,25 +1,30 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LiveManager : MonoBehaviour
 {
-    public float timeToGenerateLife = 300f; 
-    public int maxLives = 5; 
-    private int currentLives = 0;
-    private DateTime lifeGenStartTime;
 
-    private float timer; 
-    private bool isTimerRunning = false; 
+    private const string TIMER_TEXT_FORMAT= "Next in {0:00}:{1:00}";
+    private const string LIVE_TEXT_FORMAT = "Lives : <color=#00FF00>{0}</color><color=#FFFFFF>/{1}</color>";
+    public float TimeToGenerateLife = 300f; 
+    public int MaxLives = 5; 
+    private int CurrentLives = 0;
+    private DateTime LifeGenStartTime;
 
-    public Text timerText; 
+    private float Timer; 
+    private bool IsTimerRunning = false; 
+
+    [SerializeField]private TextMeshProUGUI TimerText;
+    [SerializeField]private TextMeshProUGUI LiveCounter;
 
     public void Initialize(float timeToGenerateLife, int maxLives, int currentLives, DateTime lifeGenStartTime)
     {
-        this.timeToGenerateLife = timeToGenerateLife;
-        this.maxLives = maxLives;
-        this.currentLives = currentLives;
-        this.lifeGenStartTime = lifeGenStartTime;
+        this.TimeToGenerateLife = timeToGenerateLife;
+        this.MaxLives = maxLives;
+        this.CurrentLives = currentLives;
+        this.LifeGenStartTime = lifeGenStartTime;
 
         UpdateUI();
 
@@ -39,28 +44,33 @@ public class LiveManager : MonoBehaviour
     }
     public void OnLiveConsumed()
     {
-        if (currentLives > 1)
-            currentLives--;
+        if (CurrentLives > 1)
+            CurrentLives--;
 
-        if (!isTimerRunning)
+        if (!IsTimerRunning)
+        {
+            LifeGenStartTime = DateTime.Now;
             StartTimer();
+        }
+           
+        LiveCounter.text = string.Format(LIVE_TEXT_FORMAT,CurrentLives,MaxLives);
     }
     private void Update()
     {
-        if (isTimerRunning)
+        if (IsTimerRunning)
         {
-            timer = (float)(lifeGenStartTime.AddSeconds(timeToGenerateLife) - DateTime.Now).TotalSeconds;
+            Timer = (float)(LifeGenStartTime.AddSeconds(TimeToGenerateLife) - DateTime.Now).TotalSeconds;
 
             UpdateUI();
 
-            if (timer <= 0f)
+            if (Timer <= 0f)
             {
                 GameEventManager.LifeReplenished();
-                currentLives++;
-                isTimerRunning = false;
-                lifeGenStartTime = DateTime.MinValue;
+                CurrentLives++;
+                IsTimerRunning = false;
+                LifeGenStartTime = DateTime.MinValue;
                 UpdateUI(); 
-                if (currentLives < maxLives)
+                if (CurrentLives < MaxLives)
                 {
                     StartTimer(); 
                 }
@@ -70,23 +80,23 @@ public class LiveManager : MonoBehaviour
 
      private void StartTimer()
     {
-        if (isTimerRunning)
+        if (IsTimerRunning)
             return;
-        lifeGenStartTime = DateTime.Now; 
-        timer = timeToGenerateLife;
-        isTimerRunning = true;
+        Timer = TimeToGenerateLife;
+        IsTimerRunning = true;
+        LiveCounter.text = string.Format(LIVE_TEXT_FORMAT, CurrentLives, MaxLives);
     }
 
     private void UpdateUI()
     {
-        if (currentLives < maxLives)
+        if (CurrentLives < MaxLives)
         {
-            timerText.text = FormatTime(timer);
-            timerText.gameObject.SetActive(true);
+            TimerText.text = FormatTime(Timer);
+            TimerText.gameObject.SetActive(true);
         }
         else
         {
-            timerText.gameObject.SetActive(false);
+            TimerText.gameObject.SetActive(false);
         }
     }
 
@@ -94,8 +104,19 @@ public class LiveManager : MonoBehaviour
     {
         int minutes = Mathf.FloorToInt(timeInSeconds / 60);
         int seconds = Mathf.FloorToInt(timeInSeconds % 60);
-        return string.Format("{0:00}:{1:00}", minutes, seconds);
+        return string.Format(TIMER_TEXT_FORMAT, minutes, seconds);
     }
 
-    
+#if UNITY_EDITOR
+    [SerializeField] bool IsTesting = false;
+    private void LateUpdate()
+    {
+        if (IsTesting)
+        {
+            IsTesting = false;
+            StartTimer();
+        }
+    }
+#endif
+
 }
