@@ -52,7 +52,7 @@ public class AudioManager : MonoBehaviour
         PlayAudio(GameOverAudio);
     }
 
-    private void LevelFinished()
+    private void LevelFinished(int levelId)
     {
         PlayAudio(LevelFinishedAudio);
     }

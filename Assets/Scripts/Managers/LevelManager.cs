@@ -143,7 +143,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         Debug.Log("Mole Killed"+CurrentScore);
         if(CurrentScore >= ScoreToWin)
         {
-            GameEventManager.LevelFinished();
+            GameEventManager.LevelFinished(CurrentLevelId);
         }
     }
 

@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour
         for(int i = 0; i < levels.Count; i++)
         {
             level = GameObject.Instantiate(LevelUIPrefab, LevelsGrid, false);
-            level.GetComponent<LevelUI>().SetDetails(AllLevels[i],false);
+            level.GetComponent<LevelUI>().SetDetails(AllLevels[i],false,false);
            
         }
          

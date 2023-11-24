@@ -5,7 +5,7 @@ public static class GameEventManager
     // I would use AddListener and Remove Listener methods but for demo purposes implemented simple events.
     public static event Action OnMoleKilled;
     public static event Action OnMoleMissed;
-    public static event Action OnLevelFinished;
+    public static event Action<int> OnLevelFinished;
     public static event Action OnLifeReplenished;
     public static event Action OnGameOver;
     public static event Action OnMoleSpawned;
@@ -29,9 +29,9 @@ public static class GameEventManager
         OnMoleMissed?.Invoke();
     }
 
-    public static void LevelFinished()
+    public static void LevelFinished(int levelId)
     {
-        OnLevelFinished?.Invoke();
+        OnLevelFinished?.Invoke(levelId);
     }
 
     public static void LifeReplenished()

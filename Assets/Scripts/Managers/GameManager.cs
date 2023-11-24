@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour,ISaveGameState
 
     }
 
-    private void LevelFinished()
+    private void LevelFinished(int levelId)
     {
         GameEndPopup.ShowPopup(true);
         PlayerDataManager.Instance.UpdateLevelCompletion(currentLevel.Index);
