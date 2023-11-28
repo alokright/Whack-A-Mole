@@ -34,8 +34,5 @@ public class UIManager : MonoBehaviour
         }
          
     }
-    public void ShowAds()
-    {
-        AdManager.Instance.ShowAds();
-    }
+  
 }
