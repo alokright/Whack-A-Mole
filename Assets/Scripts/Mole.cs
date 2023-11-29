@@ -17,10 +17,30 @@ public class Mole : MonoBehaviour
     private Coroutine MoveRoutine = null;
     private Camera mainCamera;
     private LayerMask moleLayerMask;
+    private bool IsGameOver = false;
     void Start()
     {
         moleLayerMask = LayerMask.GetMask("Mole");
-        mainCamera = Camera.main; // Cache the main camera
+        mainCamera = Camera.main;
+    }
+
+    private void OnEnable()
+    {
+        GameEventManager.OnGameOver += OnGameOver;
+        GameEventManager.OnGamePaused += OnGameOver;
+    }
+    private void OnDisable()
+    {
+        GameEventManager.OnGameOver -= OnGameOver;
+        GameEventManager.OnGamePaused -= OnGameOver;
+    }
+
+    private void OnGameOver()
+    {
+        if (IsAlive)
+        {
+           IsGameOver = true;
+        }
     }
 
     IEnumerator StartMoving()
@@ -44,7 +64,6 @@ public class Mole : MonoBehaviour
         transform.localPosition = to;
 
         yield return new WaitForSeconds(AliveDuration);
-        Debug.Log("Mole Moving Down"+debugCount);
         IsMoving = true;
         to = new Vector3(0f, fromY, 0f);
         elapsedTime = 0f;
@@ -67,10 +86,12 @@ public class Mole : MonoBehaviour
     private static int debugCount = 0;
     public void ShowMole()
     {
+        if (IsGameOver)
+            return;
         IsAlive = true;
         IsMoving = true;
+        IsGameOver = false;
         MoveRoutine = StartCoroutine(StartMoving());
-        Debug.LogError("MOLE SHOWING"+debugCount++);
     }
 
     void Update()
@@ -101,7 +122,6 @@ public class Mole : MonoBehaviour
         {
             if (hit.collider.gameObject == gameObject)
             {
-                Debug.Log("Mole Tapped"+ debugCount);
                 MoleKilled();
             }
         }
@@ -109,8 +129,9 @@ public class Mole : MonoBehaviour
     private void MoleMissed()
     {
         ObjectPoolManager.Instance.ReturnObject(gameObject.transform.parent.gameObject);
-        Debug.Log("Mole Missed"+ debugCount);
-        GameEventManager.MoleMissed();
+
+        if(!IsGameOver)
+            GameEventManager.MoleMissed();
         IsAlive = false;
     }
 

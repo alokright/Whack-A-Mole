@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Timeline.Actions;
 
 public class AdManager : IAdListener
 {

@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6169d2e1e56f2441fa264da51b3e8961, type: 3}
-  m_Name: 1
+  m_Script: {fileID: 11500000, guid: 5a18cfd66817bd44486e0301cd62bf71, type: 3}
+  m_Name: GameConfig
   m_EditorClassIdentifier: 
-  Index: 100
-  NumberOfHoles: 3
-  MovementDuration: 1
-  MoleLifeTime: 1.5
+  LifeGenerationDuration: 10
   MolePositions:
   - {x: -1.8, y: 0, z: -1.5}
   - {x: 0, y: 0, z: -1.5}
@@ -26,10 +23,3 @@ MonoBehaviour:
   - {x: -1.8, y: 0, z: 3.5}
   - {x: 0, y: 0, z: 3.5}
   - {x: 1.8, y: 0, z: 3.5}
-  MolePrefab: {fileID: 0}
-  Score: 1
-  Damage: 1
-  AnimationClipId: 
-  MaxScore: 3
-  MaxLives: 3
-  MaxAdsResumes: 1

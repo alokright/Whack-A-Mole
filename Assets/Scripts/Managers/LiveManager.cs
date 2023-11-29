@@ -26,12 +26,28 @@ public class LiveManager : MonoBehaviour
         this.CurrentLives = currentLives;
         this.LifeGenStartTime = lifeGenStartTime;
 
+        Timer = (float)(LifeGenStartTime.AddSeconds(TimeToGenerateLife) - DateTime.Now).TotalSeconds;
+        Debug.Log("Timer"+Timer);
+        while (Timer < 0)
+        {
+            Timer = Timer + TimeToGenerateLife;
+            CurrentLives++;
+            lifeGenStartTime = LifeGenStartTime.AddSeconds(TimeToGenerateLife);
+        }
+        if (CurrentLives > MaxLives)
+        {
+            CurrentLives = MaxLives;
+            PlayerDataManager.Instance.SetLiveGenerationStartTime(lifeGenStartTime.Ticks);
+        }
+        
         UpdateUI();
-
+       
         if (currentLives < maxLives)
         {
             StartTimer();
         }
+
+        LiveCounter.text = string.Format(LIVE_TEXT_FORMAT, CurrentLives, MaxLives);
     }
 
     private void OnEnable()
@@ -50,9 +66,10 @@ public class LiveManager : MonoBehaviour
         if (!IsTimerRunning)
         {
             LifeGenStartTime = DateTime.Now;
+            PlayerDataManager.Instance.SetLiveGenerationStartTime(DateTime.Now.Ticks);
             StartTimer();
         }
-           
+        PlayerDataManager.Instance.SetLives(CurrentLives);
         LiveCounter.text = string.Format(LIVE_TEXT_FORMAT,CurrentLives,MaxLives);
     }
     private void Update()
@@ -72,8 +89,12 @@ public class LiveManager : MonoBehaviour
                 UpdateUI(); 
                 if (CurrentLives < MaxLives)
                 {
-                    StartTimer(); 
+                    StartTimer();
+                    LifeGenStartTime = DateTime.Now;
+                    PlayerDataManager.Instance.SetLiveGenerationStartTime(DateTime.Now.Ticks);
                 }
+                LiveCounter.text = string.Format(LIVE_TEXT_FORMAT, CurrentLives, MaxLives);
+                PlayerDataManager.Instance.SetLives(CurrentLives);
             }
         }
     }
@@ -109,6 +130,9 @@ public class LiveManager : MonoBehaviour
 
 #if UNITY_EDITOR
     [SerializeField] bool IsTesting = false;
+
+    public int CurrentLives1 { get => CurrentLives; set => CurrentLives = value; }
+
     private void LateUpdate()
     {
         if (IsTesting)

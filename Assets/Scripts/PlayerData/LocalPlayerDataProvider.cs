@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -14,6 +15,9 @@ public class LocalPlayerDataProvider : IPlayerDataProvider
     private const string LIVES_KEY = "p_l";
     private const string LEVEL_STATE_KEY = "l_s_k";
     private const string SAVED_GAME_DATA_KEY = "s_g_d";
+
+    private const string LIVE_GEN_START_TIME = "l_gen_s_k";
+    private const string LIVES_SLOT_SIZE_KEY = "l_slot_s_k";
 
     public void Init()
     {
@@ -32,9 +36,16 @@ public class LocalPlayerDataProvider : IPlayerDataProvider
 
     public int GetLives()
     {
-        return lives;
+        if (PlayerPrefs.HasKey(LIVES_KEY))
+            return PlayerPrefs.GetInt(LIVES_KEY);
+        return 6;
     }
 
+    public void SetLives(int lives)
+    {
+        PlayerPrefs.SetInt(LIVES_KEY,lives);
+        PlayerPrefs.Save();
+    }
     public Dictionary<int, LevelState> GetLevelStates()
     {
         
@@ -89,5 +100,29 @@ public class LocalPlayerDataProvider : IPlayerDataProvider
     {
         PlayerPrefs.DeleteKey(SAVED_GAME_DATA_KEY);
         PlayerPrefs.Save();
+    }
+
+    public DateTime GetLiveGenerationStartTime()
+    {
+        if(PlayerPrefs.HasKey(LIVE_GEN_START_TIME))
+        {
+            return new DateTime(long.Parse(PlayerPrefs.GetString(LIVE_GEN_START_TIME)));
+        }
+        return DateTime.Now;
+    }
+
+    public void SetLiveGenerationStartTime(long ticks)
+    {
+         PlayerPrefs.SetString(LIVE_GEN_START_TIME,ticks.ToString());
+        PlayerPrefs.Save();
+    }
+
+    public int GetLivesSlotSize()
+    {
+        if (PlayerPrefs.HasKey(LIVES_SLOT_SIZE_KEY))
+        {
+            return PlayerPrefs.GetInt(LIVES_SLOT_SIZE_KEY);
+        }
+        return 6;
     }
 }

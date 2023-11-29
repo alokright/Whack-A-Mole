@@ -54,6 +54,16 @@ public class PlayerDataManager
         dataProvider.SetLevelCompleted(levelId);
     }
 
+    public int GetLivesSlotSize()
+    {
+        return dataProvider.GetLivesSlotSize();
+    }
+
+    public DateTime GetLiveGenerationStartTime()
+    {
+        return dataProvider.GetLiveGenerationStartTime();
+    }
+
     public void SaveGameData(string data)
     {
         dataProvider.SaveGameData(data);
@@ -62,6 +72,16 @@ public class PlayerDataManager
     public bool IsGameSaved()
     {
         return dataProvider.IsGameSaved();
+    }
+
+    public void SetLiveGenerationStartTime(long ticks)
+    {
+        dataProvider.SetLiveGenerationStartTime(ticks);
+    }
+
+    internal void SetLives(int currentLives)
+    {
+        dataProvider.SetLives(currentLives);
     }
 
     public Dictionary<string, object> GetSavedGameData()

@@ -9,20 +9,26 @@ public class GameManager : MonoBehaviour,ISaveGameState
     [SerializeField] GameEndUI GameEndPopup;
     [SerializeField] LevelDataProvider levelDataProvder;
     [SerializeField] GameSaveHandler SaveHandler;
+    [SerializeField] LiveManager LifeManager;
+    [SerializeField] GameConfig gameConfig;
     private LevelData currentLevel;
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+    }
     void Start()
     {
         AdManager.Initialize();
         if (SaveHandler.ShouldResumeGame())
         {
             SaveHandler.ShowResumePopup();
-          
         }
         else
         {
             //Show Main Menu
             ShowMainMenu();
         }
+        LifeManager.Initialize(gameConfig.LifeGenerationDuration, PlayerDataManager.Instance.GetLivesSlotSize(), PlayerDataManager.Instance.GetPlayerLives(),PlayerDataManager.Instance.GetLiveGenerationStartTime());
     }
 
     private void OnEnable()
@@ -117,11 +123,14 @@ public class GameManager : MonoBehaviour,ISaveGameState
     public Dictionary<string, object> SaveGameData(Dictionary<string, object> data)
     {
         return data;
+
     }
 
     public void SetGameResumeData(Dictionary<string, object> data)
     {
-        int id = int.Parse(data[ISaveGameState.LEVEL_ID_KEY].ToString());
+        int id = int.Parse(data[Constants.LEVEL_ID_KEY].ToString());
         currentLevel =  levelDataProvder.GetLevel(id);
+
+
     }
 }

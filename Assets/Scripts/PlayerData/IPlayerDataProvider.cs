@@ -6,16 +6,20 @@ using UnityEngine;
 public interface IPlayerDataProvider
 {
 
-    public void Init();
-    public void Refresh();
-    public void Reset();
+     void Init();
+     void Refresh();
+     void Reset();
 
-    public int GetLives();
-    public void SetLevelCompleted(int levelId);
-    public void SaveGameData(string data);
-    public string FetchSavedGameData();
-    public void ClearSavedGameData();
-    public bool IsGameSaved();
+     int GetLives();
+     void SetLives(int l);
+     void SetLevelCompleted(int levelId);
+     void SaveGameData(string data);
+     string FetchSavedGameData();
+     void ClearSavedGameData();
+     bool IsGameSaved();
+     DateTime GetLiveGenerationStartTime();
+    void SetLiveGenerationStartTime(long l);
+    int GetLivesSlotSize();
 }
 [Serializable]
 public struct LevelState

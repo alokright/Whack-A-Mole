@@ -8,15 +8,12 @@ public class LevelEditorWindow : EditorWindow
     private LevelData templateLevel;
     private List<LevelData> levels;
 
-    private string[] holeOptions = new string[] { "3 Holes", "6 Holes", "9 Holes" };
-    private int selectedHoleOption = 0;
+    private string[] options = new string[] { "Create New", "Create from Template & Select Template", "Edit & Select Level" };
+    private int selectedOption = 0;
 
-    private float moleLifeTimeMin = 0.7f;
-    private float moleLifeTimeMax = 2.0f;
-    private float movementDurationMin = 0.7f;
-    private float movementDurationMax = 2.0f;
+    private Color defaultColor;
 
-    [MenuItem("Window/Level Editor")]
+    [MenuItem("Deca/Level Editor")]
     public static void ShowWindow()
     {
         GetWindow<LevelEditorWindow>("Level Editor");
@@ -24,20 +21,69 @@ public class LevelEditorWindow : EditorWindow
 
     private void OnEnable()
     {
+        defaultColor = GUI.backgroundColor;
         LoadLevels();
     }
-
+    private int lastSelectedOption = -1;
     private void OnGUI()
     {
         EditorGUILayout.LabelField("Level Editor", EditorStyles.boldLabel);
 
-        selectedLevel = EditorGUILayout.ObjectField("Selected Level", selectedLevel, typeof(LevelData), false) as LevelData;
-        templateLevel = EditorGUILayout.ObjectField("Template Level", templateLevel, typeof(LevelData), false) as LevelData;
+        EditorGUIUtility.labelWidth = 150f; // Set label width for better alignment
 
-        if (GUILayout.Button("Select Level from Assets/Levels"))
+        selectedOption = EditorGUILayout.Popup("Select Option", selectedOption, options);
+
+        GUILayout.Space(10);
+
+        if (selectedOption == 0)
         {
-            SelectLevelFromAssets();
+            if (lastSelectedOption != selectedOption)
+                selectedLevel = null;
+            // Create New Level
+            GUI.backgroundColor = Color.cyan;
+            if (GUILayout.Button("Create New Level"))
+            {
+                CreateNewLevel();
+            }
+            GUI.backgroundColor = defaultColor;
         }
+        else if (selectedOption == 1)
+        {
+            // Create from Template & Select Template
+            templateLevel = EditorGUILayout.ObjectField("Template Level", templateLevel, typeof(LevelData), false) as LevelData;
+
+            if (GUILayout.Button("Select Template"))
+            {
+                if (templateLevel != null)
+                {
+                    CreateLevelFromTemplate();
+                }
+                else
+                {
+                    ShowError("Select a template level.");
+                }
+            }
+        }
+        else if (selectedOption == 2)
+        {
+            // Edit & Select Level
+            selectedLevel = EditorGUILayout.ObjectField("Level To Edit", selectedLevel, typeof(LevelData), false) as LevelData;
+
+           
+            if (GUILayout.Button("Select Level"))
+            {
+                if (selectedLevel != null)
+                {
+                    SelectLevelFromAssets();
+                }
+                else
+                {
+                    ShowError("Select a template level.");
+                }
+            }
+        }
+        lastSelectedOption = selectedOption;
+        GUILayout.Space(10);
 
         if (selectedLevel != null)
         {
@@ -45,26 +91,13 @@ public class LevelEditorWindow : EditorWindow
 
             GUILayout.Space(10);
 
-            EditorGUILayout.LabelField("Actions", EditorStyles.boldLabel);
-
-            if (GUILayout.Button("Save Changes"))
+            GUI.backgroundColor = Color.blue;
+            if (GUILayout.Button("Save"))
             {
                 SaveChanges();
+                ResetEditor();
             }
-
-            if (GUILayout.Button("Create New Level"))
-            {
-                CreateNewLevel();
-            }
-
-            if (GUILayout.Button("Create Level from Template"))
-            {
-                CreateLevelFromTemplate();
-            }
-        }
-        else
-        {
-            EditorGUILayout.HelpBox("Select a LevelData object to edit.", MessageType.Info);
+            GUI.backgroundColor = defaultColor;
         }
     }
 
@@ -84,30 +117,36 @@ public class LevelEditorWindow : EditorWindow
     private void DisplayLevelFields()
     {
         // Display LevelData values for editing
-        selectedHoleOption = EditorGUILayout.Popup("Number Of Holes", selectedHoleOption, holeOptions);
-        selectedLevel.NumberOfHoles = (selectedHoleOption + 1) * 3;
-
-        selectedLevel.MovementDuration = EditorGUILayout.Slider("Movement Duration", selectedLevel.MovementDuration, movementDurationMin, movementDurationMax);
-        selectedLevel.MoleLifeTime = EditorGUILayout.Slider("Mole Life Time", selectedLevel.MoleLifeTime, moleLifeTimeMin, moleLifeTimeMax);
+        selectedLevel.NumberOfHoles = EditorGUILayout.IntSlider("Number Of Holes", selectedLevel.NumberOfHoles, 1, 27);
+        selectedLevel.MovementDuration = EditorGUILayout.Slider("Movement Duration", selectedLevel.MovementDuration, 0.7f, 2.0f);
+        selectedLevel.MoleLifeTime = EditorGUILayout.Slider("Mole Life Time", selectedLevel.MoleLifeTime, 0.7f, 2.0f);
 
         selectedLevel.MolePrefab = EditorGUILayout.ObjectField("Mole Prefab", selectedLevel.MolePrefab, typeof(GameObject), false) as GameObject;
-        selectedLevel.Score = EditorGUILayout.IntSlider("Score", selectedLevel.Score, 1, int.MaxValue);
-        selectedLevel.Damage = EditorGUILayout.IntSlider("Damage", selectedLevel.Damage, 1, int.MaxValue);
+        selectedLevel.Score = EditorGUILayout.IntSlider("Score", selectedLevel.Score, 1, 10);
+        selectedLevel.Damage = EditorGUILayout.IntSlider("Damage", selectedLevel.Damage, 1, 10);
         selectedLevel.AnimationClipId = EditorGUILayout.TextField("Animation Clip Id", selectedLevel.AnimationClipId);
-        selectedLevel.MaxScore = EditorGUILayout.IntSlider("Max Score", selectedLevel.MaxScore, 1, int.MaxValue);
-        selectedLevel.MaxLives = EditorGUILayout.IntSlider("Max Lives", selectedLevel.MaxLives, 1, int.MaxValue);
-        selectedLevel.MaxAdsResumes = EditorGUILayout.IntSlider("Max Ads Resumes", selectedLevel.MaxAdsResumes, 1, int.MaxValue);
+        selectedLevel.MaxScore = EditorGUILayout.IntSlider("Max Score", selectedLevel.MaxScore, 1, 100);
+        selectedLevel.MaxLives = EditorGUILayout.IntSlider("Max Lives", selectedLevel.MaxLives, 1, 100);
+        selectedLevel.MaxAdsResumes = EditorGUILayout.IntSlider("Max Ads Resumes", selectedLevel.MaxAdsResumes, 1, 5);
     }
 
     private void SaveChanges()
     {
-        EditorUtility.SetDirty(selectedLevel);
-        AssetDatabase.SaveAssets();
-        Debug.Log("Changes Saved");
+        if (selectedLevel != null)
+        {
+            EditorUtility.SetDirty(selectedLevel);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Changes Saved");
+        }
+        else
+        {
+            Debug.LogError("No level selected to save.");
+        }
     }
 
     private void CreateNewLevel()
     {
+        selectedOption = 0;
         string path = EditorUtility.SaveFilePanelInProject("Save New Level", "NewLevel", "asset", "Enter a name for the new level");
 
         if (!string.IsNullOrEmpty(path))
@@ -123,35 +162,42 @@ public class LevelEditorWindow : EditorWindow
 
     private void CreateLevelFromTemplate()
     {
-        if (templateLevel != null)
-        {
-            string path = EditorUtility.SaveFilePanelInProject("Save New Level from Template", "NewLevelFromTemplate", "asset", "Enter a name for the new level");
+        selectedOption = 1;
+        selectedLevel = Instantiate(templateLevel);
+    }
 
-            if (!string.IsNullOrEmpty(path))
-            {
-                LevelData newLevel = Instantiate(templateLevel);
-                AssetDatabase.CreateAsset(newLevel, path);
-                levels.Add(newLevel);
-                selectedLevel = newLevel;
-                SaveChanges();
-                LoadLevels();
-            }
-        }
-        else
-        {
-            Debug.LogError("Template Level is not selected.");
-        }
+    private void SetDefaultValues()
+    {
+        // Set default values for the new or template level
+        selectedLevel.NumberOfHoles = 3;
+        selectedLevel.MovementDuration = 1.0f;
+        selectedLevel.MoleLifeTime = 1.0f;
+        // Set other default values as needed
     }
 
     private void SelectLevelFromAssets()
     {
-        GenericMenu menu = new GenericMenu();
+        selectedOption = 2;
+      //  selectedLevel = Instantiate(templateLevel);
+        //GenericMenu menu = new GenericMenu();
 
-        foreach (var level in levels)
-        {
-            menu.AddItem(new GUIContent(level.name), false, () => { selectedLevel = level; });
-        }
+        //foreach (var level in levels)
+        //{
+        //    menu.AddItem(new GUIContent(level.name), false, () => { selectedLevel = level; });
+        //}
 
-        menu.ShowAsContext();
+        //menu.ShowAsContext();
+    }
+
+    private void ResetEditor()
+    {
+        selectedOption = 0;
+        selectedLevel = null;
+        templateLevel = null;
+    }
+
+    private void ShowError(string message)
+    {
+        EditorUtility.DisplayDialog("Error", message, "OK");
     }
 }

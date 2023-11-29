@@ -10,11 +10,12 @@ public class LevelManager : MonoBehaviour,ISaveGameState
 {
     private int CurrentScore = 0;
     private int repeatCount;
-    [SerializeField]
-    private Transform MoleParent;
+    [SerializeField]private Transform MoleParent;
+    [SerializeField]private List<GameObject> HolesVisuals;
 
-    [SerializeField]
-    private TextMeshProUGUI TimerText;
+    [SerializeField] private TextMeshProUGUI TimerText;
+    [SerializeField] private GameState gameState = GameState.DEFAULT;
+    [SerializeField] private GameConfig gameConfig;
 
     private List<int> HoleSequence = null;
     private int HoleIndex = 0;
@@ -27,13 +28,15 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     private int MaxLives;
     private int ScoreToWin;
     private int LivesConsumed = 0;
-    private GameState gameState = GameState.DEFAULT;
+   
     private int CurrentLevelId;
 
     private bool HasWatchedAd = false;
     private Coroutine MoleSpawnRoutine = null;
     [SerializeField] TextMeshProUGUI ScoreText;
     [SerializeField] TextMeshProUGUI LivesText;
+
+
     private void OnEnable()
     {
         GameEventManager.OnMoleKilled += OnMoleKilled;
@@ -55,6 +58,8 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         ScoreToWin = level.MaxScore;
         HoleIndex = 0;
         HoleSequence = GenerateNonAdjacentSequence(level.NumberOfHoles, level.MaxScore+level.MaxLives+1);
+        for (int i = 0; i < HolesVisuals.Count; i++)
+            HolesVisuals[i].SetActive(i< level.NumberOfHoles);
         MaxLives = level.MaxLives;
         LivesConsumed = 0;
         gameState = GameState.RUNNING;
@@ -70,6 +75,8 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         ScoreToWin = level.MaxScore;
         HoleIndex = 0;
         HoleSequence = GenerateNonAdjacentSequence(level.NumberOfHoles, level.MaxScore + level.MaxLives + 1);
+        for (int i = 0; i < HolesVisuals.Count; i++)
+            HolesVisuals[i].SetActive(i < level.NumberOfHoles);
         MaxLives = level.MaxLives;
         LivesText.text = string.Format(HUD_TEXT_FORMAT, MaxLives - LivesConsumed, MaxLives);
         ScoreText.text = string.Format(HUD_TEXT_FORMAT, CurrentScore,ScoreToWin);
@@ -104,7 +111,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
       
         GameObject moleObject = ObjectPoolManager.Instance.GetObject();
         moleObject.transform.parent = MoleParent;
-        moleObject.transform.localPosition = testLevel.MolePositions[HoleSequence[HoleIndex++]];
+        moleObject.transform.localPosition = gameConfig.MolePositions[HoleSequence[HoleIndex++]];
         Mole moleScript = moleObject.GetComponentInChildren<Mole>();
 
         if (moleScript != null)
@@ -118,7 +125,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     {
         GameObject moleObject = ObjectPoolManager.Instance.GetObject();
         moleObject.transform.parent = MoleParent;
-        moleObject.transform.localPosition = testLevel.MolePositions[HoleSequence[HoleIndex++]];
+        moleObject.transform.localPosition = gameConfig.MolePositions[HoleSequence[HoleIndex++]];
         Mole moleScript = moleObject.GetComponentInChildren<Mole>();
 
         if (moleScript != null)
@@ -144,6 +151,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         if(CurrentScore >= ScoreToWin)
         {
             GameEventManager.LevelFinished(CurrentLevelId);
+            gameState = GameState.GAME_OVER;
         }
     }
 
@@ -248,18 +256,18 @@ public class LevelManager : MonoBehaviour,ISaveGameState
 
     public Dictionary<string, object> SaveGameData(Dictionary<string, object> data)
     {
-        data[ISaveGameState.LEVEL_ID_KEY] = CurrentLevelId;
-        data[ISaveGameState.LEVEL_SCORE_KEY] = CurrentScore;
-        data[ISaveGameState.LEVEL_LIVES_CONSUMED_KEY] = LivesConsumed;
-        data[ISaveGameState.LEVEL_AD_WATCHED_KEY] = false;
+        data[Constants.LEVEL_ID_KEY] = CurrentLevelId;
+        data[Constants.LEVEL_SCORE_KEY] = CurrentScore;
+        data[Constants.LEVEL_LIVES_CONSUMED_KEY] = LivesConsumed;
+        data[Constants.LEVEL_AD_WATCHED_KEY] = false;
         return data;
     }
     public void SetGameResumeData(Dictionary<string, object> data)
     {
-        CurrentLevelId = int.Parse(data[ISaveGameState.LEVEL_ID_KEY].ToString());
-        CurrentScore = int.Parse(data[ISaveGameState.LEVEL_SCORE_KEY].ToString()) ;
-        LivesConsumed = int.Parse(data[ISaveGameState.LEVEL_LIVES_CONSUMED_KEY].ToString());
-        HasWatchedAd = bool.Parse(data[ISaveGameState.LEVEL_AD_WATCHED_KEY].ToString());
+        CurrentLevelId = int.Parse(data[Constants.LEVEL_ID_KEY].ToString());
+        CurrentScore = int.Parse(data[Constants.LEVEL_SCORE_KEY].ToString()) ;
+        LivesConsumed = int.Parse(data[Constants.LEVEL_LIVES_CONSUMED_KEY].ToString());
+        HasWatchedAd = bool.Parse(data[Constants.LEVEL_AD_WATCHED_KEY].ToString());
     }
 
     public enum GameState

@@ -1,4 +1,6 @@
 
+using System;
+
 public class NetworkPlayerDataProvider : IPlayerDataProvider
 {
     public void ClearSavedGameData()
@@ -16,9 +18,19 @@ public class NetworkPlayerDataProvider : IPlayerDataProvider
         throw new System.NotImplementedException();
     }
 
+    public DateTime GetLiveGenerationStartTime()
+    {
+        throw new NotImplementedException();
+    }
+
     public int GetLives()
     {
         throw new System.NotImplementedException();
+    }
+
+    public int GetLivesSlotSize()
+    {
+        throw new NotImplementedException();
     }
 
     public void Init()
@@ -49,5 +61,15 @@ public class NetworkPlayerDataProvider : IPlayerDataProvider
     public void SetLevelCompleted(int levelId)
     {
         throw new System.NotImplementedException();
+    }
+
+    public void SetLiveGenerationStartTime(long l)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetLives(int l)
+    {
+        throw new NotImplementedException();
     }
 }
