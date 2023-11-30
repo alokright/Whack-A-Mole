@@ -33,9 +33,14 @@ The game is designed to be adaptable and flexible. For example, the **GameManage
 ### 1. Level Designer Editor & GameConfig ScriptableObject
 
 Custom Editor to create and edit levels which can be accessed from Deca/Level Editor
-1. Create new level:
-2. Create a level using another level as Template:
-3. Edit a Level:
+
+1. Create new level:![create](https://github.com/alokright/Whack-A-Mole/assets/1422629/56c8c767-b51a-40ce-aa55-ee2a42c59ca5)
+
+2. Create a level using another level as Template:![Untitled2](https://github.com/alokright/Whack-A-Mole/assets/1422629/a3c1ec41-d9a9-4de6-a910-a832fd008e8d)
+
+3. Edit a Level:![edit](https://github.com/alokright/Whack-A-Mole/assets/1422629/8cfe004e-a88f-4fe0-bde0-78e435a3ca0f)
+4. GameConfig Editor to manage design which can be accessed from Deca/GameConfig: ![gameconfig](https://github.com/alokright/Whack-A-Mole/assets/1422629/8d2605b7-1409-4464-9b8d-ca9ab8a5acd1)
+
 
 #### LevelData, LevelDataProvider, ILevelDataProvider (`Assets/Scripts/Levels/`)
 
