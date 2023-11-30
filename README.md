@@ -39,7 +39,8 @@ Custom Editor to create and edit levels which can be accessed from Deca/Level Ed
 2. Create a level using another level as Template:![Untitled2](https://github.com/alokright/Whack-A-Mole/assets/1422629/a3c1ec41-d9a9-4de6-a910-a832fd008e8d)
 
 3. Edit a Level:![edit](https://github.com/alokright/Whack-A-Mole/assets/1422629/8cfe004e-a88f-4fe0-bde0-78e435a3ca0f)
-4. GameConfig Editor to manage design which can be accessed from Deca/GameConfig: ![gameconfig](https://github.com/alokright/Whack-A-Mole/assets/1422629/8d2605b7-1409-4464-9b8d-ca9ab8a5acd1)
+4. GameConfig Editor to manage design which can be accessed from Deca/GameConfig: ![gameconfig](https://github.com/alokright/Whack-A-Mole/assets/1422629/3fccbc9c-7e76-47a7-9b8d-22bafd85ee95)
+
 
 
 #### LevelData, LevelDataProvider, ILevelDataProvider (`Assets/Scripts/Levels/`)
