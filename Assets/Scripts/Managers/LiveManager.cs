@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class LiveManager : MonoBehaviour
 {
-
     private const string TIMER_TEXT_FORMAT= "Next in {0:00}:{1:00}";
     private const string LIVE_TEXT_FORMAT = "Lives : <color=#00FF00>{0}</color><color=#FFFFFF>/{1}</color>";
     public float TimeToGenerateLife = 300f; 
@@ -130,6 +129,7 @@ public class LiveManager : MonoBehaviour
         return string.Format(TIMER_TEXT_FORMAT, minutes, seconds);
     }
 
+    #region Unit Testing
 #if UNITY_EDITOR
     [SerializeField] bool IsTesting = false;
 
@@ -144,5 +144,5 @@ public class LiveManager : MonoBehaviour
         }
     }
 #endif
-
+    #endregion
 }

@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour,ISaveGameState
     private void Awake()
     {
         Application.targetFrameRate = 60;
+        gameConfig = Resources.Load<GameConfig>("GameConfig");
+        
     }
     void Start()
     {
@@ -122,14 +124,11 @@ public class GameManager : MonoBehaviour,ISaveGameState
     public Dictionary<string, object> SaveGameData(Dictionary<string, object> data)
     {
         return data;
-
     }
 
     public void SetGameResumeData(Dictionary<string, object> data)
     {
         int id = int.Parse(data[Constants.LEVEL_ID_KEY].ToString());
         currentLevel =  levelDataProvder.GetLevel(id);
-
-
     }
 }

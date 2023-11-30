@@ -8,15 +8,17 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour,ISaveGameState
 {
-    private int CurrentScore = 0;
-    private int repeatCount;
     [SerializeField]private Transform MoleParent;
     [SerializeField]private List<GameObject> HolesVisuals;
 
     [SerializeField] private TextMeshProUGUI TimerText;
     [SerializeField] private GameState gameState = GameState.DEFAULT;
     [SerializeField] private GameConfig gameConfig;
+    [SerializeField] TextMeshProUGUI ScoreText;
+    [SerializeField] TextMeshProUGUI LivesText;
 
+    private int CurrentScore = 0;
+    private int repeatCount;
     private List<int> HoleSequence = null;
     private int HoleIndex = 0;
     private float StartTimeDuration = 0;
@@ -33,10 +35,11 @@ public class LevelManager : MonoBehaviour,ISaveGameState
 
     private bool HasWatchedAd = false;
     private Coroutine MoleSpawnRoutine = null;
-    [SerializeField] TextMeshProUGUI ScoreText;
-    [SerializeField] TextMeshProUGUI LivesText;
-
-
+   
+    private void Start()
+    {
+        gameConfig = Resources.Load<GameConfig>("GameConfig");
+    }
     private void OnEnable()
     {
         GameEventManager.OnMoleKilled += OnMoleKilled;
@@ -49,8 +52,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         GameEventManager.OnMoleKilled -= OnMoleKilled;
         GameEventManager.OnMoleMissed -= OnMoleMissed;
     }
-
-
+    
     public void LoadLevel(LevelData level)
     {
         CurrentScore = 0;
@@ -92,35 +94,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         gameState = GameState.DEFAULT;
         SetupMoleSpawn();
     }
-
    
-    IEnumerator RepeatedlyShowMoles()
-    {
-        for (int i = 0; i < repeatCount; i++)
-        {
-            GetAndShowMole();
-            while (gameState == GameState.PAUSED)
-                yield return null;
-            yield return new WaitForSeconds(UnityEngine.Random.Range(1.1f, 2f)); // Wait before showing the next mole
-        }
-    }
-
-    
-    void GetAndShowMole()
-    {
-      
-        GameObject moleObject = ObjectPoolManager.Instance.GetObject();
-        moleObject.transform.parent = MoleParent;
-        moleObject.transform.localPosition = gameConfig.MolePositions[HoleSequence[HoleIndex++]];
-        Mole moleScript = moleObject.GetComponentInChildren<Mole>();
-
-        if (moleScript != null)
-        {
-            float delay = UnityEngine.Random.Range(0.5f, 1f);
-            MoleSpawnRoutine = StartCoroutine(DelayedShowMole(moleScript, delay));
-        }
-    }
-
     private void SpawnMole()
     {
         GameObject moleObject = ObjectPoolManager.Instance.GetObject();
@@ -134,7 +108,6 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         }
 
         SetupMoleSpawn();
-
 
     }
 
@@ -174,6 +147,31 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     {
         yield return new WaitForSeconds(delay);
         mole.ShowMole();
+    }
+    IEnumerator RepeatedlyShowMoles()
+    {
+        for (int i = 0; i < repeatCount; i++)
+        {
+            GetAndShowMole();
+            while (gameState == GameState.PAUSED)
+                yield return null;
+            yield return new WaitForSeconds(UnityEngine.Random.Range(1.1f, 2f)); // Wait before showing the next mole
+        }
+    }
+    
+    void GetAndShowMole()
+    {
+
+        GameObject moleObject = ObjectPoolManager.Instance.GetObject();
+        moleObject.transform.parent = MoleParent;
+        moleObject.transform.localPosition = gameConfig.MolePositions[HoleSequence[HoleIndex++]];
+        Mole moleScript = moleObject.GetComponentInChildren<Mole>();
+
+        if (moleScript != null)
+        {
+            float delay = UnityEngine.Random.Range(0.5f, 1f);
+            MoleSpawnRoutine = StartCoroutine(DelayedShowMole(moleScript, delay));
+        }
     }
 
     private List<int> GenerateNonAdjacentSequence(int range, int sequenceLength)
@@ -239,21 +237,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         }
 
     }
-
    
-
-    [SerializeField] private bool isTesting = false;
-    [SerializeField] LevelData testLevel;
-    private void LateUpdate()
-    {
-        if (isTesting)
-        {
-            isTesting = false;
-            LoadLevel(testLevel);
-            StartGame(DateTime.Now.Add(TimeSpan.FromSeconds(3)));
-        }
-    }
-
     public Dictionary<string, object> SaveGameData(Dictionary<string, object> data)
     {
         data[Constants.LEVEL_ID_KEY] = CurrentLevelId;
@@ -277,4 +261,19 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         GAME_OVER,
         DEFAULT
     }
+    
+    #region Unit Testing
+
+    [SerializeField] private bool isTesting = false;
+    [SerializeField] LevelData testLevel;
+    private void LateUpdate()
+    {
+        if (isTesting)
+        {
+            isTesting = false;
+            LoadLevel(testLevel);
+            StartGame(DateTime.Now.Add(TimeSpan.FromSeconds(3)));
+        }
+    }
+    #endregion
 }
