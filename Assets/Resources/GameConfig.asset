@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a18cfd66817bd44486e0301cd62bf71, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  LifeGenerationDuration: 10
+  LifeGenerationDuration: 15
   MolePositions:
   - {x: -1.8, y: 0, z: -1.5}
   - {x: 0, y: 0, z: -1.5}
