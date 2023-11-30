@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-[CreateAssetMenu(fileName = "GameConfig", menuName = "Deca/ScriptableObject/GameConfig")]
+[CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObject/GameConfig")]
 public class GameConfig : ScriptableObject
 {
     public float LifeGenerationDuration = 10f;

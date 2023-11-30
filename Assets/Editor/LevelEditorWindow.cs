@@ -8,7 +8,7 @@ public class LevelEditorWindow : EditorWindow
     private LevelData templateLevel;
     private List<LevelData> levels;
 
-    private string[] options = new string[] { "Create New", "Create from Template & Select Template", "Edit & Select Level" };
+    private string[] options = new string[] { "Create New", "Create New from Template", "Edit Level" };
     private int selectedOption = 0;
 
     private Color defaultColor;

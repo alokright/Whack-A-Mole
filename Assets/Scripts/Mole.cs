@@ -15,6 +15,7 @@ public class Mole : MonoBehaviour
     [SerializeField] float Speed = 1f;
     [SerializeField] float AliveDuration = 5f;
     [SerializeField] ParticleSystem HitFX;
+    [SerializeField] ParticleSystem SpawnFX;
     private Coroutine MoveRoutine = null;
     private Camera mainCamera;
     private LayerMask moleLayerMask;
@@ -51,12 +52,14 @@ public class Mole : MonoBehaviour
         Vector3 to = new Vector3(0f,ToY,0f);
         float elapsedTime = 0f;
         float t = 0;
+        SpawnFX.Stop();
+        SpawnFX.Play();
         while (IsMoving && elapsedTime <= Duration)
         {
             yield return null;
             t = elapsedTime / Duration;
             elapsedTime += Time.deltaTime;
-
+            
             transform.localPosition = Vector3.Lerp(transform.localPosition,to,t);
             if ((to - transform.localPosition).magnitude < 0.01f)
                 IsMoving = false;
@@ -144,12 +147,16 @@ public class Mole : MonoBehaviour
     {
         IsAlive = false;
         IsMoving = false;
-        //StopCoroutine(MoveRoutine);
-        //transform.localPosition = new Vector3(0f, -1f, 0f);
-        //ObjectPoolManager.Instance.ReturnObject(gameObject.transform.parent.gameObject);
+        StopCoroutine(MoveRoutine);
+        StartCoroutine(HideMole());
         GameEventManager.MoleKilled();
     }
-
+    IEnumerator HideMole()
+    {
+        yield return new WaitForSeconds(0.3f);
+        transform.localPosition = new Vector3(0f, -1f, 0f);
+        ObjectPoolManager.Instance.ReturnObject(gameObject.transform.parent.gameObject);
+    }
 #if UNITY_EDITOR
     [SerializeField]bool testMovement = false;
     [SerializeField] bool testDirectionForward = true;
