@@ -15,8 +15,16 @@ public class GameConfigEditorWindow : EditorWindow
 
     private void OnGUI()
     {
-        GUILayout.Label("Game Configuration Editor", EditorStyles.boldLabel);
+        GUIStyle coloredLabelStyle = new GUIStyle(EditorStyles.boldLabel);
+        coloredLabelStyle.normal.textColor = Color.red;
+        
+        GUIStyle coloredButtonStyle = new GUIStyle(GUI.skin.button);
+        coloredButtonStyle.normal.textColor = Color.blue; 
+        coloredButtonStyle.fontStyle = FontStyle.Bold;
+        
+        GUILayout.Label("Game Configuration Editor");
 
+        
         if (GUILayout.Button("Search GameConfig in Assets"))
         {
             SearchGameConfig();
@@ -25,23 +33,25 @@ public class GameConfigEditorWindow : EditorWindow
         if (gameConfig != null)
         {
             EditorGUI.BeginChangeCheck();
-
-            // Display and edit fields
+            
             gameConfig.LifeGenerationDuration = EditorGUILayout.FloatField("Life Generation Duration", gameConfig.LifeGenerationDuration);
-
-            EditorGUILayout.LabelField("Mole Positions");
+            EditorGUILayout.Space(5);
+            EditorGUILayout.LabelField("Mole Movement Positions", coloredLabelStyle);
+            gameConfig.MoleHidePosition = EditorGUILayout.Vector3Field("Hidden Position ", gameConfig.MoleHidePosition);
+            gameConfig.MoleShowPosition = EditorGUILayout.Vector3Field("Shown Position ", gameConfig.MoleHidePosition);
+            EditorGUILayout.Space(5);
+            EditorGUILayout.LabelField("Mole Positions", coloredLabelStyle);
             for (int i = 0; i < gameConfig.MolePositions.Count; i++)
             {
                 gameConfig.MolePositions[i] = EditorGUILayout.Vector3Field("Position " + (i + 1), gameConfig.MolePositions[i]);
             }
-
             if (EditorGUI.EndChangeCheck())
             {
                 EditorUtility.SetDirty(gameConfig);
             }
 
-            // Save Button
-            if (GUILayout.Button("Save"))
+            // Save Button with custom style
+            if (GUILayout.Button("Save", coloredButtonStyle))
             {
                 SaveGameConfig();
             }

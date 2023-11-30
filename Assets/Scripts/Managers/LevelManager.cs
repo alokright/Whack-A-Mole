@@ -35,7 +35,9 @@ public class LevelManager : MonoBehaviour,ISaveGameState
 
     private bool HasWatchedAd = false;
     private Coroutine MoleSpawnRoutine = null;
-   
+    private float minSpawnWait = 0f;
+    private float maxSpawnWait;
+    private LevelData currentLevel;
     private void Start()
     {
         gameConfig = Resources.Load<GameConfig>("GameConfig");
@@ -68,7 +70,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         LivesText.text = string.Format(HUD_TEXT_FORMAT, MaxLives-LivesConsumed, MaxLives);
         ScoreText.text = string.Format(HUD_TEXT_FORMAT, CurrentScore, ScoreToWin);
         CurrentLevelId = level.Index;
-
+        currentLevel = level;
     }
 
     public void ReloadLevel(LevelData level)
@@ -83,7 +85,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         LivesText.text = string.Format(HUD_TEXT_FORMAT, MaxLives - LivesConsumed, MaxLives);
         ScoreText.text = string.Format(HUD_TEXT_FORMAT, CurrentScore,ScoreToWin);
         CurrentLevelId = level.Index;
-
+        currentLevel = level;
     }
 
     public void StartGame(DateTime startTime)
@@ -99,21 +101,24 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     {
         GameObject moleObject = ObjectPoolManager.Instance.GetObject();
         moleObject.transform.parent = MoleParent;
+        Debug.Log("game MolePositions" + gameConfig.MolePositions.Count + " Seq "+HoleSequence.Count+ "HOLE INDEX"+HoleIndex);
         moleObject.transform.localPosition = gameConfig.MolePositions[HoleSequence[HoleIndex++]];
         Mole moleScript = moleObject.GetComponentInChildren<Mole>();
 
         if (moleScript != null)
         {
-            moleScript.ShowMole();
+            moleScript.ShowMole(currentLevel.MoleMovementDuration, currentLevel.MoleAliveDuration);
         }
-
+        Debug.Log("currentLevel.MoleMovementDuration"+ currentLevel.MoleMovementDuration + " currentLevel.MoleAliveDuration "+ currentLevel.MoleAliveDuration);
         SetupMoleSpawn();
 
     }
 
     private void SetupMoleSpawn()
     {
-        SpawnDelay = UnityEngine.Random.Range(1.5f, 2.4f);
+       
+        SpawnDelay = UnityEngine.Random.Range(currentLevel.MinWaitTimeToSpawn, currentLevel.MaxWaitTimeToSpawn);
+        Debug.Log("Duration" + currentLevel.MinWaitTimeToSpawn + " asd " + currentLevel.MaxWaitTimeToSpawn+"  fer"+ SpawnDelay);
     }
     //Update Scores
     private void OnMoleKilled()
@@ -146,7 +151,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     IEnumerator DelayedShowMole(Mole mole, float delay)
     {
         yield return new WaitForSeconds(delay);
-        mole.ShowMole();
+        mole.ShowMole(currentLevel.MoleMovementDuration, currentLevel.MoleAliveDuration);
     }
     IEnumerator RepeatedlyShowMoles()
     {
@@ -164,6 +169,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
 
         GameObject moleObject = ObjectPoolManager.Instance.GetObject();
         moleObject.transform.parent = MoleParent;
+        Debug.Log("game MolePositions" + gameConfig.MolePositions.Count);
         moleObject.transform.localPosition = gameConfig.MolePositions[HoleSequence[HoleIndex++]];
         Mole moleScript = moleObject.GetComponentInChildren<Mole>();
 

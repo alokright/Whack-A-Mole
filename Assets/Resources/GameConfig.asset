@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a18cfd66817bd44486e0301cd62bf71, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  LifeGenerationDuration: 15
+  MoleShowPosition: {x: 0, y: 0.5, z: 0}
+  MoleHidePosition: {x: 0, y: -0.5, z: 0}
   MolePositions:
   - {x: -1.8, y: 0, z: -1.5}
   - {x: 0, y: 0, z: -1.5}
@@ -23,3 +24,4 @@ MonoBehaviour:
   - {x: -1.8, y: 0, z: 3.5}
   - {x: 0, y: 0, z: 3.5}
   - {x: 1.8, y: 0, z: 3.5}
+  LifeGenerationDuration: 15

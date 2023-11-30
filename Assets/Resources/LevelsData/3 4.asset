@@ -14,20 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Index: 304
   NumberOfHoles: 9
-  MovementDuration: 1
-  MoleLifeTime: 1.5
-  MolePositions:
-  - {x: -1.8, y: 0, z: -1.5}
-  - {x: 0, y: 0, z: -1.5}
-  - {x: 1.8, y: 0, z: -1.5}
-  - {x: -1.8, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 1.8, y: 0, z: 1}
-  - {x: -1.8, y: 0, z: 3.5}
-  - {x: 0, y: 0, z: 3.5}
-  - {x: 1.8, y: 0, z: 3.5}
   MolePrefab: {fileID: 0}
   Score: 1
   Damage: 1
   AnimationClipId: 
-  MaxScore: 20
+  MaxScore: 25
+  MaxLives: 3
+  MaxAdsResumes: 1
+  MinWaitTimeToSpawn: 0.9
+  MaxWaitTimeToSpawn: 1.4
+  MoleMovementDuration: 0.9
+  MoleAliveDuration: 0.9
