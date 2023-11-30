@@ -17,40 +17,40 @@ The game follows a structured flow:
 
 ## Additional Game Features
 
-2. [Level Designer & GameConfig]Custom editor to Create a new level from scratch, Create a new Level from the template and Edit a level. GameConfig Scriptable object to handle design values. 
-3. [Ads System]Players can Watch Ads and resume a level.
-4. [Save System]Game gets paused if put in the background. If users close the game, the current level ID is serialized, and the player will start from that level.
-5. [Local Timer System]One life gets replenished every 15 secs.
+1. **[Level Designer & GameConfig]** Custom editor to Create a new level from scratch, Create a new Level from template and Edit a level. GameConfig Scriptable object to handle design values. 
+2. **[Ads System]** Players can Watch Ads and resume a level.
+3. **[Save System]** Player progression and other details are saved using PlayerDataManager. Currently, PlayerPrefs based storage is utilized but the design supports adding other sync mechanisms like via Network etc. Game gets paused if put in the background. If users close the game, the current level ID is serialized, and the player will start from that level.
+4. **[Local Timer System]** One life gets replenished every 15 secs and details are saved using PlayerDataManager.
 
-## Main Components
+## Architecture
+The game's design follows the **SOLID principles**. At the core of this structure is the **GameEventManager**, which uses a **Singleton Observer pattern**. This setup helps in efficiently handling various game events.
 
-### Level Designer Editor & GameConfig ScriptableObject
+Several key elements of the game, like the **AudioManager**, **GameManager**, **UI Managers**, **AdsManager**, and **PlayerDataManager**, are built with a focus on **Single Responsibility Principle**. Each of these elements is simple in design, following the **Simple Component** i.e. **MonoBehaviour** approach. This simplicity means that each part of the game has a clear, distinct role, making the overall game easier to manage and expand.
+
+The game is designed to be adaptable and flexible. For example, the **GameManager**, which controls important aspects like the game menu and different game states, is set up in a way that allows new features to be added easily in the future. Similarly, the **GameEventManager** is made to easily accommodate new types of events and responses.
+
+## Extended Components
+
+### 1. Level Designer Editor & GameConfig ScriptableObject
 
 Custom Editor to create and edit levels which can be accessed from Deca/Level Editor
 1. Create new level:
 2. Create a level using another level as Template:
 3. Edit a Level:
 
-#### LevelManager (`Assets/Scripts/Managers/LevelManager.cs`)
-
-- **Design:** Singleton for centralized level management.
-- **Purpose:** Provides level data and helper methods for streamlined level-loading processes.
-- **Extension:** Singleton design facilitates straightforward integration of additional level-related features.
-
 #### LevelData, LevelDataProvider, ILevelDataProvider (`Assets/Scripts/Levels/`)
 
-- **Design:** LevelData as ScriptableObjects encapsulating details.
+- **Design:** LevelData as ScriptableObjects encapsulating details. LevelDataProvider using ILevelDataProvider is built to implement makeshift Dependency Injection.
 - **Purpose:** Offers a structured way to provide level-specific data.
-- **Extension:** Supports various providers (local, networked, etc.) through interfaces for flexibility.
+- **Extension:** Supports various providers (local, networked, etc.) through interfaces for flexibility. We can add Addressable/AssetBundle or even Json based LevelData by Implementing ILevelDataProvider and patching it with LevelDataProvider. 
 
-### Save System System Architecture
+### 2. Save System System Architecture
 GameSaveHandler and ISaveGameState (`Assets/Scripts/GameSave/`)
 
 - **Design:** Simple MonoBehaviour.
-- **Purpose:** Tracks GameState data from objects implementing ISaveGameState, providing helper methods for game restart.
-- **Extension:** Supports dynamic binding and different data sources like local, networked, etc.
+- **Purpose:** Tracks GameState data from objects implementing ISaveGameState, providing helper methods for game restart. GameManager tracks the all the data by keeping track of ISaveGameState objects and calling save and set methods for saving and resuming games.
 
-### Unity Ads Provider System Architecture
+### 3. Unity Ads Provider System Architecture
 
 #### 1. `AbstractAdProvider.cs`
 ```csharp
@@ -168,54 +168,38 @@ public class AdManager
 
 This architecture allows for straightforward integration of new ad providers, while keeping the system scalable and maintainable.
 
-### 4. LiveManager (`Assets/Scripts/Managers/`)
+### 4.[Local Timer System] LiveManager (`Assets/Scripts/Managers/`)
 
-- **Design:** Simple MonoBehaviour initialized by GameManager.
+- **Design:** Simple MonoBehaviour initialized by GameManager. Saves timers details using PlayerDataManager.
 - **Purpose:** Triggers events and tracks full life state and timer UI.
 - **Extension:** Can be refactored for managing various local timers and associated UIs in the future.
+  
+### 5.[Data Managers] PlayerDataManager, LocalPlayerDataProvider, IPlayerDataProvider, NetworkPlayerDataProvider (`Assets/Scripts/PlayerData/`)
 
 
-### 1. GameManager (`Assets/Scripts/Managers/GameManager.cs`)
+- **Design:** Singleton managing player profile and progress data.
+- **Purpose:** Centralized access to player data. Follows same architecture as Ads System. 
+
+- **Extension:** Dynamic polymorphism via IPlayerDataProvider for seamless integration of multiple data sources. Supports compile-time switching between sources.
+
+
+### 6. GameManager (`Assets/Scripts/Managers/GameManager.cs`)
 
 - **Design:** Simple MonoBehaviour ensuring loose coupling.
 - **Purpose:** Manages MainMenu visibility, saved games, and game states (e.g., GameOver, Level Complete) by listening to events.
 - **Extension:** Currently no specific extension. Designed for easy additions without disrupting existing functionality.
 
-### 2. GameEventManager (`Assets/Scripts/Managers/GameEventManager.cs`)
+### 7. GameEventManager (`Assets/Scripts/Managers/GameEventManager.cs`)
 
 - **Design:** Singleton Observer pattern.
 - **Purpose:** Subject-agnostic game events provider, allowing subjects to trigger events.
 - **Extension:** Encourages easy addition of new events and methods for subjects and observers through interfaces.
 
-
-### 5. PlayerDataManager, LocalPlayerDataProvider, IPlayerDataProvider, NetworkPlayerDataProvider (`Assets/Scripts/PlayerData/`)
-
-- **Design:** Singleton managing player profile and progress data.
-- **Purpose:** Centralized access to player data.
-- **Extension:** Dynamic polymorphism via IPlayerDataProvider for seamless integration of multiple data sources. Supports compile-time switching between sources.
-
-### 6. Mole (`Assets/Scripts/`)
+### 8. Mole (`Assets/Scripts/`)
 
 - **Design:** Simple MonoBehaviour with potential for refactoring into components like IMoveable, IKillable, MoleVisuals.
 - **Purpose:** Implements basic Mole movement and interaction.
 - **Extension:** Modular design for easy composition of various Mole types. Enables extension and customization of Mole behavior.
-
-### 8. AudioManager (`Assets/Scripts/Managers/`)
-
-- **Design:** Event-driven AudioManager.
-- **Purpose:** Plays audio based on game events.
-
-
-### 11. UI components
-
-#### - GameEndUI
-
-- **Design:** Event-driven game end popup.
-
-#### - LevelUI
-
-- **Purpose:** Main menu level details UI.
-
 
 
 **Happy Whacking!**
