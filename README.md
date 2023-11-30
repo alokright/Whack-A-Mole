@@ -16,7 +16,6 @@ The game follows a structured flow:
 - Player Comes back to MainMenu
 
 ## Additional Game Features
-
 1. **[Level Designer & GameConfig]** Custom editor to Create a new level from scratch, Create a new Level from template and Edit a level. GameConfig Scriptable object to handle design values. 
 2. **[Ads System]** Players can Watch Ads and resume a level.
 3. **[Save System]** Player progression and other details are saved using PlayerDataManager. Currently, PlayerPrefs based storage is utilized but the design supports adding other sync mechanisms like via Network etc. Game gets paused if put in the background. If users close the game, the current level ID is serialized, and the player will start from that level.
