@@ -173,14 +173,105 @@ This architecture allows for straightforward integration of new ad providers, wh
 - **Design:** Simple MonoBehaviour initialized by GameManager. Saves timers details using PlayerDataManager.
 - **Purpose:** Triggers events and tracks full life state and timer UI.
 - **Extension:** Can be refactored for managing various local timers and associated UIs in the future.
-  
-### 5.[Data Managers] PlayerDataManager, LocalPlayerDataProvider, IPlayerDataProvider, NetworkPlayerDataProvider (`Assets/Scripts/PlayerData/`)
 
+### 5.[Data Management] Player Data Management System Architecture
 
-- **Design:** Singleton managing player profile and progress data.
-- **Purpose:** Centralized access to player data. Follows same architecture as Ads System. 
+#### 1. PlayerDataManager.cs
+```csharp
+public class PlayerDataManager : Singleton<PlayerDataManager>
+{
+    IPlayerDataProvider dataProvider = null;
+    private PlayerDataManager()
+    {
+        dataProvider = new LocalPlayerDataProvider();
+    }
+    private static PlayerDataManager _instance;
+    public static PlayerDataManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                Init();
+            return _instance;
+        }
+    }
 
-- **Extension:** Dynamic polymorphism via IPlayerDataProvider for seamless integration of multiple data sources. Supports compile-time switching between sources.
+    public static void Init()
+    {
+        _instance = new PlayerDataManager();
+    }
+    // Player data management logic here
+}
+```
+- Manages all aspects of player data.
+- Inherits from Singleton for a single instance management.
+
+#### 2. IPlayerDataProvider.cs
+```csharp
+public interface IPlayerDataProvider
+{
+    void Init();
+    void Refresh();
+    void Reset();
+
+    int GetLives();
+    // Interface methods for player data operations
+}
+```
+- Defines the contract for player data providers.
+- Contains methods for initialization, data refresh, reset, and retrieving lives.
+
+#### 3. LocalPlayerDataProvider.cs
+```csharp
+/// <summary>
+/// Local PlayerPref based data storage
+/// </summary>
+public class LocalPlayerDataProvider : IPlayerDataProvider
+{
+    private int lives;
+    
+    // Constants
+    private const string LIVES_KEY = "p_l";
+    private const string LEVEL_STATE_KEY = "l_s_k";
+    private const string SAVED_GAME_DATA_KEY = "s_g_d";
+    private const string LIVE_GEN_START_TIME = "l_gen_s_k";
+    private const string LIVES_SLOT_SIZE_KEY = "l_slot_s_k";
+
+    public void Init()
+    {
+        lives = PlayerPrefs.GetInt(LIVES_KEY);
+    }
+    // Additional implementation details
+}
+```
+- Manages player data in local storage via PlayerPrefs.
+- Implements IPlayerDataProvider for local data management.
+
+#### 4. NetworkPlayerDataProvider.cs
+```csharp
+public class NetworkPlayerDataProvider : IPlayerDataProvider
+{
+    // Network data handling implementation
+}
+```
+- Handles player data operations over a network.
+- Implements IPlayerDataProvider for network-based data management.
+
+### Adding New Player Data Providers
+
+- **Modularity**: Separate class for each type of data provider.
+- **Steps to Add New Provider**:
+  1. Create a class implementing `IPlayerDataProvider`.
+  2. Define methods for specific data operations.
+  3. Integrate with `PlayerDataManager` for management.
+
+### Benefits
+
+- **Loose Coupling**: Easy to integrate and remove data providers.
+- **Scalability**: Adaptable to new data sources.
+- **Maintainability**: Minimal impact on the system from changes in data providers.
+
+This architecture provides a flexible and scalable framework for managing player data, supporting various data storage methods and ensuring system integrity and adaptability.
 
 
 ### 6. GameManager (`Assets/Scripts/Managers/GameManager.cs`)
