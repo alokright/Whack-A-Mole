@@ -113,7 +113,6 @@ public class GameManager : MonoBehaviour,ISaveGameState
 
     private void StartNextLevel()
     {
-
         LevelData nextLevel= levelDataProvder.GetNextLevel(currentLevel);
         LevelManager.LoadLevel(nextLevel);
         currentLevel = nextLevel;

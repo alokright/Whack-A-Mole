@@ -14,6 +14,7 @@ public class Mole : MonoBehaviour
     [SerializeField] float Duration = 1f;
     [SerializeField] float Speed = 1f;
     [SerializeField] float AliveDuration = 5f;
+    [SerializeField] ParticleSystem HitFX;
     private Coroutine MoveRoutine = null;
     private Camera mainCamera;
     private LayerMask moleLayerMask;
@@ -123,6 +124,9 @@ public class Mole : MonoBehaviour
             if (hit.collider.gameObject == gameObject)
             {
                 MoleKilled();
+                HitFX.Stop();
+                HitFX.Play();
+                //Instantiate(HitFX, transform);
             }
         }
     }
@@ -140,9 +144,9 @@ public class Mole : MonoBehaviour
     {
         IsAlive = false;
         IsMoving = false;
-        StopCoroutine(MoveRoutine);
-        transform.localPosition = new Vector3(0f, -1f, 0f);
-        ObjectPoolManager.Instance.ReturnObject(gameObject.transform.parent.gameObject);
+        //StopCoroutine(MoveRoutine);
+        //transform.localPosition = new Vector3(0f, -1f, 0f);
+        //ObjectPoolManager.Instance.ReturnObject(gameObject.transform.parent.gameObject);
         GameEventManager.MoleKilled();
     }
 

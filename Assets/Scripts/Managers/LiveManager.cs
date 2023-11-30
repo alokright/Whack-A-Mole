@@ -84,6 +84,8 @@ public class LiveManager : MonoBehaviour
             {
                 GameEventManager.LifeReplenished();
                 CurrentLives++;
+                if (CurrentLives > MaxLives)
+                    CurrentLives = MaxLives;
                 IsTimerRunning = false;
                 LifeGenStartTime = DateTime.MinValue;
                 UpdateUI(); 
@@ -98,8 +100,8 @@ public class LiveManager : MonoBehaviour
             }
         }
     }
-
-     private void StartTimer()
+    //CFX_Hit_C White(Clone)
+    private void StartTimer()
     {
         if (IsTimerRunning)
             return;
