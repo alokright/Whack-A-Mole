@@ -152,7 +152,7 @@ public class AdManager
 - Likely contains logic to handle ad providers, manage their lifecycle, and orchestrate ad displaying.
 
 
-### Adding New Ad Providers
+#### Adding New Ad Providers
 
 - **Modularity**: Each ad provider is a separate class extending `AbstractAdProvider`.
 - **Steps to Add New Provider**:
@@ -160,7 +160,7 @@ public class AdManager
   2. Implement all abstract methods (`InitializeProvider`, `PreloadAds`, `CanShowAds`, `ShowAds`).
   3. Integrate with `AdManager` for managing its lifecycle.
 
-### Benefits of This Architecture
+#### Benefits of This Architecture
 
 - **Loose Coupling**: Ad providers are loosely coupled with the system, making it easy to add/remove providers.
 - **Scalability**: Easy to scale by adding new ad providers as separate classes.
