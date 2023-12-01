@@ -118,8 +118,8 @@ public class LevelEditorWindow : EditorWindow
     {
         // Display LevelData values for editing
         selectedLevel.NumberOfHoles = EditorGUILayout.IntSlider("Number Of Holes", selectedLevel.NumberOfHoles, 1, 27);
-        selectedLevel.MovementDuration = EditorGUILayout.Slider("Movement Duration", selectedLevel.MovementDuration, 0.7f, 2.0f);
-        selectedLevel.MoleLifeTime = EditorGUILayout.Slider("Mole Life Time", selectedLevel.MoleLifeTime, 0.7f, 2.0f);
+        selectedLevel.MoleMovementDuration = EditorGUILayout.Slider("Movement Duration", selectedLevel.MoleMovementDuration, 0.7f, 2.0f);
+        selectedLevel.MoleAliveDuration = EditorGUILayout.Slider("Mole Life Time", selectedLevel.MoleAliveDuration, 0.7f, 2.0f);
 
         selectedLevel.MolePrefab = EditorGUILayout.ObjectField("Mole Prefab", selectedLevel.MolePrefab, typeof(GameObject), false) as GameObject;
         selectedLevel.Score = EditorGUILayout.IntSlider("Score", selectedLevel.Score, 1, 10);
@@ -170,8 +170,8 @@ public class LevelEditorWindow : EditorWindow
     {
         // Set default values for the new or template level
         selectedLevel.NumberOfHoles = 3;
-        selectedLevel.MovementDuration = 1.0f;
-        selectedLevel.MoleLifeTime = 1.0f;
+        selectedLevel.MoleMovementDuration = 1.0f;
+        selectedLevel.MoleAliveDuration = 1.0f;
         // Set other default values as needed
     }
 

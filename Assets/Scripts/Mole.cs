@@ -9,10 +9,7 @@ public class Mole : MonoBehaviour
     [SerializeField] bool IsAlive = true;
     [SerializeField] bool IsDead;
     [SerializeField] bool IsHidden;
-    [SerializeField] float fromY = -0.5f;
-    [SerializeField] float ToY = 1.25f;
     [SerializeField] float Duration = 1f;
-    [SerializeField] float Speed = 1f;
     [SerializeField] float AliveDuration = 5f;
     [SerializeField] ParticleSystem HitFX;
     [SerializeField] ParticleSystem SpawnFX;
@@ -20,10 +17,12 @@ public class Mole : MonoBehaviour
     private Camera mainCamera;
     private LayerMask moleLayerMask;
     private bool IsGameOver = false;
+    private GameConfig gameConfig;
     void Start()
     {
         moleLayerMask = LayerMask.GetMask("Mole");
         mainCamera = Camera.main;
+       
     }
 
     private void OnEnable()
@@ -47,9 +46,10 @@ public class Mole : MonoBehaviour
 
     IEnumerator StartMoving()
     {
-        
-        transform.localPosition = new Vector3(0f, fromY, 0f);
-        Vector3 to = new Vector3(0f,ToY,0f);
+        if(gameConfig == null)
+            gameConfig = Resources.Load<GameConfig>("GameConfig");
+        transform.localPosition = gameConfig.MoleHidePosition;
+        Vector3 to = gameConfig.MoleShowPosition;
         float elapsedTime = 0f;
         float t = 0;
         SpawnFX.Stop();
@@ -69,7 +69,7 @@ public class Mole : MonoBehaviour
 
         yield return new WaitForSeconds(AliveDuration);
         IsMoving = true;
-        to = new Vector3(0f, fromY, 0f);
+        to = gameConfig.MoleHidePosition;
         elapsedTime = 0f;
         t = 0;
         while (IsMoving && elapsedTime <= Duration)
@@ -88,13 +88,15 @@ public class Mole : MonoBehaviour
     }
 
     private static int debugCount = 0;
-    public void ShowMole()
+    public void ShowMole(float moveDuration, float aliveTime)
     {
         if (IsGameOver)
             return;
         IsAlive = true;
         IsMoving = true;
         IsGameOver = false;
+        Duration = moveDuration;
+        AliveDuration = aliveTime;
         MoveRoutine = StartCoroutine(StartMoving());
     }
 
@@ -157,6 +159,7 @@ public class Mole : MonoBehaviour
         transform.localPosition = new Vector3(0f, -1f, 0f);
         ObjectPoolManager.Instance.ReturnObject(gameObject.transform.parent.gameObject);
     }
+    #region UNIT TESTS
 #if UNITY_EDITOR
     [SerializeField]bool testMovement = false;
     [SerializeField] bool testDirectionForward = true;
@@ -170,4 +173,5 @@ public class Mole : MonoBehaviour
         }
     }
 #endif
+    #endregion
 }
