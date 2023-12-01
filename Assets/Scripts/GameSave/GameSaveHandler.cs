@@ -7,14 +7,12 @@ using UnityEngine.UI;
 
 public class GameSaveHandler : MonoBehaviour
 {
-
     public List<MonoBehaviour> DataProviders;
     [SerializeField] Button ResumeButton;
     [SerializeField] Button MainMenuButton;
 
     [SerializeField] GameObject ResumePopupParent;
-
-
+    
     void Start()
     {
         ResumeButton.onClick.AddListener(()=> {
@@ -26,8 +24,21 @@ public class GameSaveHandler : MonoBehaviour
             PlayerDataManager.Instance.ClearSavedGameData();
             GameEventManager.ShowMainMenu();
         });
+       
+    }
+    private void OnEnable()
+    {
+        GameEventManager.OnLevelFinished += LevelFinished;
+    }
+    private void OnDisable()
+    {
+        GameEventManager.OnLevelFinished -= LevelFinished;
     }
 
+    private void LevelFinished(int obj)
+    {
+        PlayerDataManager.Instance.ClearSavedGameData();
+    }
 #if UNITY_EDITOR
 
     private void OnApplicationQuit()

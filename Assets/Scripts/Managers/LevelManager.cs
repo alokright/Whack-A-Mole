@@ -101,7 +101,6 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     {
         GameObject moleObject = ObjectPoolManager.Instance.GetObject();
         moleObject.transform.parent = MoleParent;
-        Debug.Log("game MolePositions" + gameConfig.MolePositions.Count + " Seq "+HoleSequence.Count+ "HOLE INDEX"+HoleIndex);
         moleObject.transform.localPosition = gameConfig.MolePositions[HoleSequence[HoleIndex++]];
         Mole moleScript = moleObject.GetComponentInChildren<Mole>();
 
@@ -246,6 +245,8 @@ public class LevelManager : MonoBehaviour,ISaveGameState
    
     public Dictionary<string, object> SaveGameData(Dictionary<string, object> data)
     {
+        if (gameState != GameState.RUNNING)
+            return data;
         data[Constants.LEVEL_ID_KEY] = CurrentLevelId;
         data[Constants.LEVEL_SCORE_KEY] = CurrentScore;
         data[Constants.LEVEL_LIVES_CONSUMED_KEY] = LivesConsumed;

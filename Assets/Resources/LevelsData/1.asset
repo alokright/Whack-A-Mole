@@ -24,4 +24,4 @@ MonoBehaviour:
   MinWaitTimeToSpawn: 1.4
   MaxWaitTimeToSpawn: 2.4
   MoleMovementDuration: 1
-  MoleAliveDuration: 2.5
+  MoleAliveDuration: 2
