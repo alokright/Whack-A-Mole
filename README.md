@@ -10,7 +10,7 @@ The game follows a structured flow:
 
 - MainMenu => ShowLevels => User Selects a Level => GameManager Loads Levels using LevelManager
 - GamePlayManager Updates UI and LevelManager Starts Game Timer
-- LevelManager Shows Moles at Random Time & tracks Lives
+- LevelManager Shows Moles from ObjectPool at Random Time & tracks Lives
 - Level Finishes or GameOver
 - User gets a game end popup; in case of level failure, they can watch an ad and continue with an extra life.
 - Player Comes back to MainMenu
