@@ -10513,6 +10513,7 @@ MonoBehaviour:
   gameConfig: {fileID: 11400000, guid: 611fe911a576cd04ea6ac0a68724413e, type: 2}
   ScoreText: {fileID: 279703788}
   LivesText: {fileID: 1539279258}
+  GameSaveHandler: {fileID: 1309389389}
   isTesting: 0
   testLevel: {fileID: 11400000, guid: 2b9ec032364b14776bcc289934637e20, type: 2}
 --- !u!114 &2135858222
@@ -10983,8 +10984,8 @@ SceneRoots:
   - {fileID: 1382185657}
   - {fileID: 1707156042}
   - {fileID: 1311561777}
-  - {fileID: 1994260784}
   - {fileID: 2135858220}
   - {fileID: 954633146}
   - {fileID: 1309389390}
   - {fileID: 1107930848}
+  - {fileID: 1994260784}

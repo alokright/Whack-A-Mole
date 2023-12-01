@@ -51,17 +51,13 @@ public class GameSaveHandler : MonoBehaviour
       
     }
 #endif
-    private void OnApplicationPause(bool pause)
+    public void SaveData()
     {
-        if (pause)
-        {
-            Dictionary<string, object> data = new Dictionary<string, object>();
+        Dictionary<string, object> data = new Dictionary<string, object>();
             foreach (var providers in DataProviders)
                 data = ((ISaveGameState) providers).SaveGameData(data);
 
             PlayerDataManager.Instance.SaveGameData(JsonConvert.SerializeObject(data));
-        }
-       
     }
 
     public bool ShouldResumeGame()

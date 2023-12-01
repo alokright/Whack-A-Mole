@@ -16,7 +16,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     [SerializeField] private GameConfig gameConfig;
     [SerializeField] TextMeshProUGUI ScoreText;
     [SerializeField] TextMeshProUGUI LivesText;
-
+    [SerializeField] GameSaveHandler GameSaveHandler;
     private int CurrentScore = 0;
     private int repeatCount;
     private List<int> HoleSequence = null;
@@ -38,6 +38,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     private float minSpawnWait = 0f;
     private float maxSpawnWait;
     private LevelData currentLevel;
+
     private void Start()
     {
         gameConfig = Resources.Load<GameConfig>("GameConfig");
@@ -259,6 +260,15 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         CurrentScore = int.Parse(data[Constants.LEVEL_SCORE_KEY].ToString()) ;
         LivesConsumed = int.Parse(data[Constants.LEVEL_LIVES_CONSUMED_KEY].ToString());
         HasWatchedAd = bool.Parse(data[Constants.LEVEL_AD_WATCHED_KEY].ToString());
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause && gameState == GameState.RUNNING)
+        {
+            GameSaveHandler.SaveData();
+        }
+
     }
 
     public enum GameState
