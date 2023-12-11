@@ -101,7 +101,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
    
     private void SpawnMole()
     {
-        GameObject moleObject = ObjectPoolManager.Instance.GetObject();
+        GameObject moleObject = ObjectPoolManager.Instance.GetObject(currentLevel.PrefabType);
         moleObject.transform.parent = MoleParent;
         moleObject.transform.localPosition = gameConfig.MolePositions[HoleSequence[HoleIndex++]];
         Mole moleScript = moleObject.GetComponentInChildren<Mole>();
@@ -168,7 +168,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     void GetAndShowMole()
     {
 
-        GameObject moleObject = ObjectPoolManager.Instance.GetObject();
+        GameObject moleObject = ObjectPoolManager.Instance.GetObject(currentLevel.PrefabType);
         moleObject.transform.parent = MoleParent;
         Debug.Log("game MolePositions" + gameConfig.MolePositions.Count);
         moleObject.transform.localPosition = gameConfig.MolePositions[HoleSequence[HoleIndex++]];

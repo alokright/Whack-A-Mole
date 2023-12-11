@@ -8,7 +8,7 @@ public class LevelData : ScriptableObject, IComparable<LevelData>
     public int Index;
     public int NumberOfHoles;
   
-    public GameObject MolePrefab;
+    public PoolObjectType PrefabType;
     public int Score;
     public int Damage;
     public string AnimationClipId; // Assuming AnimationClipId is a string, otherwise use the appropriate type

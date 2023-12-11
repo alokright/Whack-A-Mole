@@ -121,7 +121,7 @@ public class LevelEditorWindow : EditorWindow
         selectedLevel.MoleMovementDuration = EditorGUILayout.Slider("Movement Duration", selectedLevel.MoleMovementDuration, 0.7f, 2.0f);
         selectedLevel.MoleAliveDuration = EditorGUILayout.Slider("Mole Life Time", selectedLevel.MoleAliveDuration, 0.7f, 2.0f);
 
-        selectedLevel.MolePrefab = EditorGUILayout.ObjectField("Mole Prefab", selectedLevel.MolePrefab, typeof(GameObject), false) as GameObject;
+        selectedLevel.PrefabType = (PoolObjectType) EditorGUILayout.EnumPopup("Select Prefab Type",selectedLevel.PrefabType);
         selectedLevel.Score = EditorGUILayout.IntSlider("Score", selectedLevel.Score, 1, 10);
         selectedLevel.Damage = EditorGUILayout.IntSlider("Damage", selectedLevel.Damage, 1, 10);
         selectedLevel.AnimationClipId = EditorGUILayout.TextField("Animation Clip Id", selectedLevel.AnimationClipId);
