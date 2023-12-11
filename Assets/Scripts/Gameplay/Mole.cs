@@ -27,13 +27,13 @@ public class Mole : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEventManager.OnGameOver += OnGameOver;
-        GameEventManager.OnGamePaused += OnGameOver;
+        EventManager.GameStateEvents.OnGameOver += OnGameOver;
+        EventManager.GameStateEvents.OnGamePaused += OnGameOver;
     }
     private void OnDisable()
     {
-        GameEventManager.OnGameOver -= OnGameOver;
-        GameEventManager.OnGamePaused -= OnGameOver;
+        EventManager.GameStateEvents.OnGameOver -= OnGameOver;
+        EventManager.GameStateEvents.OnGamePaused -= OnGameOver;
     }
 
     private void OnGameOver()
@@ -140,7 +140,7 @@ public class Mole : MonoBehaviour
         ObjectPoolManager.Instance.ReturnObject(gameObject.transform.parent.gameObject);
 
         if(!IsGameOver)
-            GameEventManager.MoleMissed();
+            EventManager.GameActionEvents.MoleMissed();
         IsAlive = false;
     }
 
@@ -151,7 +151,7 @@ public class Mole : MonoBehaviour
         IsMoving = false;
         StopCoroutine(MoveRoutine);
         StartCoroutine(HideMole());
-        GameEventManager.MoleKilled();
+        EventManager.GameActionEvents.MoleKilled();
     }
     IEnumerator HideMole()
     {
