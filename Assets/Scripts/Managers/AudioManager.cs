@@ -14,22 +14,22 @@ public class AudioManager : MonoBehaviour
     public AudioClip LifeReplinshedAudio;
     private void OnEnable()
     {
-        GameEventManager.OnMoleSpawned += MoleSpawned;
-        GameEventManager.OnMoleMissed += MoleMissed;
-        GameEventManager.OnMoleKilled += MoleKilled;
-        GameEventManager.OnGameOver += GameOver;
-        GameEventManager.OnLevelFinished += LevelFinished;
-        GameEventManager.OnLifeReplenished += LifeReplenished;
+        EventManager.GameActionEvents.OnMoleSpawned += MoleSpawned;
+        EventManager.GameActionEvents.OnMoleMissed += MoleMissed;
+        EventManager.GameActionEvents.OnMoleKilled += MoleKilled;
+        EventManager.GameStateEvents.OnGameOver += GameOver;
+        EventManager.GameStateEvents.OnLevelFinished += LevelFinished;
+        EventManager.GameStateEvents.OnLifeReplenished += LifeReplenished;
     }
 
     private void OnDisable()
     {
-        GameEventManager.OnMoleSpawned -= MoleSpawned;
-        GameEventManager.OnMoleMissed -= MoleMissed;
-        GameEventManager.OnMoleKilled -= MoleKilled;
-        GameEventManager.OnGameOver -= GameOver;
-        GameEventManager.OnLevelFinished -= LevelFinished;
-        GameEventManager.OnLifeReplenished -= LifeReplenished;
+        EventManager.GameActionEvents.OnMoleSpawned -= MoleSpawned;
+        EventManager.GameActionEvents.OnMoleMissed -= MoleMissed;
+        EventManager.GameActionEvents.OnMoleKilled -= MoleKilled;
+        EventManager.GameStateEvents.OnGameOver -= GameOver;
+        EventManager.GameStateEvents.OnLevelFinished -= LevelFinished;
+        EventManager.GameStateEvents.OnLifeReplenished -= LifeReplenished;
     }
 
     private void MoleSpawned()

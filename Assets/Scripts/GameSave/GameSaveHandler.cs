@@ -17,22 +17,22 @@ public class GameSaveHandler : MonoBehaviour
     {
         ResumeButton.onClick.AddListener(()=> {
             ResumePopupParent.SetActive(false);
-            GameEventManager.ResumeGame();
+            EventManager.GameStateEvents.ResumeGame();
         });
         MainMenuButton.onClick.AddListener(()=> {
             ResumePopupParent.SetActive(false);
             PlayerDataManager.Instance.ClearSavedGameData();
-            GameEventManager.ShowMainMenu();
+            EventManager.PlayerEvents.ShowMainMenu();
         });
        
     }
     private void OnEnable()
     {
-        GameEventManager.OnLevelFinished += LevelFinished;
+        EventManager.GameStateEvents.OnLevelFinished += LevelFinished;
     }
     private void OnDisable()
     {
-        GameEventManager.OnLevelFinished -= LevelFinished;
+        EventManager.GameStateEvents.OnLevelFinished -= LevelFinished;
     }
 
     private void LevelFinished(int obj)

@@ -62,6 +62,6 @@ public class AdManager : IAdListener
 
     public void OnVideoAdRewardReceived()
     {
-        GameEventManager.VideoAdRewardRecieved();
+        EventManager.AdEvents.VideoAdRewardRecieved();
     }
 }

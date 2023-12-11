@@ -43,18 +43,18 @@ public class GameEndUI : MonoBehaviour
     private void ShowMainMenu()
     {
         gameObject.SetActive(false);
-        GameEventManager.ShowMainMenu();
+        EventManager.PlayerEvents.ShowMainMenu();
     }
 
     private void ShowNextLevel()
     {
         gameObject.SetActive(false);
-        GameEventManager.StartNextLevel();
+        EventManager.PlayerEvents.StartNextLevel();
     }
 
     private void WatchAdToContinue()
     {
-        GameEventManager.WatchAdToContinue();
+        EventManager.AdEvents.WatchAdToContinue();
        
     }
 

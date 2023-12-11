@@ -22,7 +22,7 @@ public class LevelUI : MonoBehaviour
     void Start()
     {
         GetComponent<Button>().onClick.AddListener(OnLevelTapped);
-        GameEventManager.OnLevelFinished += OnLevelFinished;
+        EventManager.GameStateEvents.OnLevelFinished += OnLevelFinished;
     }
 
     private void OnLevelFinished(int levelId)
@@ -54,7 +54,7 @@ public class LevelUI : MonoBehaviour
     private void OnLevelTapped()
     {
         if (!IsLocked)
-            GameEventManager.LevelSelected(LevelData);
+            EventManager.PlayerEvents.LevelSelected(LevelData);
         else
             Debug.Log("Current Level is Locked!");
     }

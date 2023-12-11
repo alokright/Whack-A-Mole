@@ -15,12 +15,12 @@ public class PlayerManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        GameEventManager.OnVideoAdRewardReceived += RewardVideoAds;
+        EventManager.AdEvents.OnVideoAdRewardReceived += RewardVideoAds;
     }
 
     private void OnDisable()
     {
-        GameEventManager.OnVideoAdRewardReceived -= RewardVideoAds;
+        EventManager.AdEvents.OnVideoAdRewardReceived -= RewardVideoAds;
     }
     private void RewardVideoAds()
     {

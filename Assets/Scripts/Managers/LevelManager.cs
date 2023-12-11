@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,37 +46,40 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     }
     private void OnEnable()
     {
-        GameEventManager.OnMoleKilled += OnMoleKilled;
-        GameEventManager.OnMoleMissed += OnMoleMissed;
+        EventManager.GameActionEvents.OnMoleKilled += OnMoleKilled;
+        EventManager.GameActionEvents.OnMoleMissed += OnMoleMissed;
     }
 
 
     private void OnDisable()
     {
-        GameEventManager.OnMoleKilled -= OnMoleKilled;
-        GameEventManager.OnMoleMissed -= OnMoleMissed;
+        EventManager.GameActionEvents.OnMoleKilled -= OnMoleKilled;
+        EventManager.GameActionEvents.OnMoleMissed -= OnMoleMissed;
     }
     
     public void LoadLevel(LevelData level)
     {
         CurrentScore = 0;
-        LivesConsumed = 0;
-        gameState = GameState.RUNNING;  
+        repeatCount = level.MaxScore+level.MaxLives;
+        ScoreToWin = level.MaxScore;
         HoleIndex = 0;
-
-        InitializeLevel(level);
+        HoleSequence = GenerateNonAdjacentSequence(level.NumberOfHoles, level.MaxScore+level.MaxLives+1);
+        for (int i = 0; i < HolesVisuals.Count; i++)
+            HolesVisuals[i].SetActive(i< level.NumberOfHoles);
+        MaxLives = level.MaxLives;
+        LivesConsumed = 0;
+        gameState = GameState.RUNNING;
+        LivesText.text = string.Format(HUD_TEXT_FORMAT, MaxLives-LivesConsumed, MaxLives);
+        ScoreText.text = string.Format(HUD_TEXT_FORMAT, CurrentScore, ScoreToWin);
+        CurrentLevelId = level.Index;
+        currentLevel = level;
     }
 
     public void ReloadLevel(LevelData level)
     {
-       InitializeLevel(level);
-    }
-
-    private void InitializeLevel(LevelData level){
         repeatCount = level.MaxScore + level.MaxLives;
         ScoreToWin = level.MaxScore;
         HoleIndex = 0;
-
         HoleSequence = GenerateNonAdjacentSequence(level.NumberOfHoles, level.MaxScore + level.MaxLives + 1);
         for (int i = 0; i < HolesVisuals.Count; i++)
             HolesVisuals[i].SetActive(i < level.NumberOfHoles);
@@ -85,6 +89,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         CurrentLevelId = level.Index;
         currentLevel = level;
     }
+
     public void StartGame(DateTime startTime)
     {
         StartTimeDuration = 3;
@@ -124,7 +129,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         Debug.Log("Mole Killed"+CurrentScore);
         if(CurrentScore >= ScoreToWin)
         {
-            GameEventManager.LevelFinished(CurrentLevelId);
+            EventManager.GameStateEvents.LevelFinished(CurrentLevelId);
             gameState = GameState.GAME_OVER;
         }
     }
@@ -138,7 +143,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
 
         if (LivesConsumed >= MaxLives)
         {
-            GameEventManager.GameOver();
+            EventManager.GameStateEvents.GameOver();
             gameState = GameState.PAUSED;
         }
         
@@ -214,9 +219,13 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         if (ShowGameTimer)
         {
             StartTimeDuration -= Time.deltaTime;
-            if(StartTimeDuration > 0)
-                 TimerText.text = string.Format(gameState == GameState.PAUSED? RESUME_TIMER_TEXT_FORMAT:START_TIMER_TEXT_FORMAT, Math.Ceiling(StartTimeDuration));
-           else
+            if (StartTimeDuration > 2)
+                TimerText.text = string.Format(gameState == GameState.PAUSED? RESUME_TIMER_TEXT_FORMAT:START_TIMER_TEXT_FORMAT, 3);
+            else if (StartTimeDuration > 1)
+                TimerText.text = string.Format(gameState == GameState.PAUSED ? RESUME_TIMER_TEXT_FORMAT : START_TIMER_TEXT_FORMAT, 2);
+            else if (StartTimeDuration > 0)
+                TimerText.text = string.Format(gameState == GameState.PAUSED ? RESUME_TIMER_TEXT_FORMAT : START_TIMER_TEXT_FORMAT, 1);
+            else
             {
                 ShowGameTimer = false;
                 gameState = GameState.RUNNING;
@@ -235,7 +244,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         }
 
     }
-
+   
     public Dictionary<string, object> SaveGameData(Dictionary<string, object> data)
     {
         if (gameState != GameState.RUNNING)

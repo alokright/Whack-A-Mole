@@ -51,11 +51,11 @@ public class LiveManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEventManager.OnMoleMissed += OnLiveConsumed;
+        EventManager.GameActionEvents.OnMoleMissed += OnLiveConsumed;
     }
     private void OnDisable()
     {
-        GameEventManager.OnMoleMissed -= OnLiveConsumed;
+        EventManager.GameActionEvents.OnMoleMissed -= OnLiveConsumed;
     }
     public void OnLiveConsumed()
     {
@@ -81,7 +81,7 @@ public class LiveManager : MonoBehaviour
 
             if (Timer <= 0f)
             {
-                GameEventManager.LifeReplenished();
+                EventManager.GameStateEvents.LifeReplenished();
                 CurrentLives++;
                 if (CurrentLives > MaxLives)
                     CurrentLives = MaxLives;
@@ -99,7 +99,7 @@ public class LiveManager : MonoBehaviour
             }
         }
     }
-    //CFX_Hit_C White(Clone)
+
     private void StartTimer()
     {
         if (IsTimerRunning)

@@ -35,14 +35,16 @@ public class GameManager : MonoBehaviour,ISaveGameState
 
     private void OnEnable()
     {
-        GameEventManager.OnLevelSelected += OnLevelSelected;
-        GameEventManager.OnGameOver += GameOver;
-        GameEventManager.OnLevelFinished += LevelFinished;
-        GameEventManager.OnShowMainMenu += ShowMainMenu;
-        GameEventManager.OnStartNextLevel += StartNextLevel;
-        GameEventManager.OnWatchAdToContinue += WatchAdToContinue;
-        GameEventManager.OnResumeGame += ResumeGame;
-        
+        EventManager.PlayerEvents.OnLevelSelected += OnLevelSelected;
+        EventManager.PlayerEvents.OnShowMainMenu += ShowMainMenu;
+        EventManager.PlayerEvents.OnStartNextLevel += StartNextLevel;
+
+        EventManager.GameStateEvents.OnGameOver += GameOver;
+        EventManager.GameStateEvents.OnLevelFinished += LevelFinished;
+        EventManager.GameStateEvents.OnResumeGame += ResumeGame;
+
+        EventManager.AdEvents.OnWatchAdToContinue += WatchAdToContinue;
+
     }
 
     private void ResumeGame()
@@ -55,13 +57,16 @@ public class GameManager : MonoBehaviour,ISaveGameState
 
     private void OnDisable()
     {
-        GameEventManager.OnLevelSelected -= OnLevelSelected;
-        GameEventManager.OnGameOver -= GameOver;
-        GameEventManager.OnLevelFinished -= LevelFinished;
-        GameEventManager.OnShowMainMenu -= ShowMainMenu;
-        GameEventManager.OnStartNextLevel -= StartNextLevel;
-        GameEventManager.OnWatchAdToContinue -= WatchAdToContinue;
-        GameEventManager.OnResumeGame -= ResumeGame;
+        EventManager.PlayerEvents.OnLevelSelected -= OnLevelSelected;
+        EventManager.PlayerEvents.OnShowMainMenu -= ShowMainMenu;
+        EventManager.PlayerEvents.OnStartNextLevel -= StartNextLevel;
+
+        EventManager.GameStateEvents.OnGameOver -= GameOver;
+        EventManager.GameStateEvents.OnLevelFinished -= LevelFinished;
+        EventManager.GameStateEvents.OnResumeGame -= ResumeGame;
+
+        EventManager.AdEvents.OnWatchAdToContinue -= WatchAdToContinue;
+        
     }
 
     private void OnLevelSelected(LevelData obj)
@@ -103,14 +108,14 @@ public class GameManager : MonoBehaviour,ISaveGameState
     private void WatchAdToContinue()
     {
         AdManager.Instance.ShowAds();
-        GameEventManager.OnVideoAdRewardReceived += AdRewardReceived;
+        EventManager.AdEvents.OnVideoAdRewardReceived += AdRewardReceived;
     }
 
     private void AdRewardReceived()
     {
         LevelManager.ResumeGame();
         GameEndPopup.HidePopup();
-        GameEventManager.OnVideoAdRewardReceived -= AdRewardReceived;
+        EventManager.AdEvents.OnVideoAdRewardReceived -= AdRewardReceived;
     }
 
     private void StartNextLevel()
