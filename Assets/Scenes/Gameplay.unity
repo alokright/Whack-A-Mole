@@ -6665,7 +6665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DataProviders:
-  - {fileID: 2135858221}
+  - {fileID: 0}
   - {fileID: 2135858223}
   ResumeButton: {fileID: 966447283}
   MainMenuButton: {fileID: 861299272}
@@ -10324,6 +10324,69 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2027642185}
   m_CullTransparentMesh: 1
+--- !u!1 &2087530445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2087530447}
+  - component: {fileID: 2087530446}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2087530446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087530445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cfafa2a55a324de2a7aa0a5527ea94c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoleParent: {fileID: 1707156042}
+  HolesVisuals:
+  - {fileID: 1370330350}
+  - {fileID: 691611930}
+  - {fileID: 267752222}
+  - {fileID: 696506770}
+  - {fileID: 2131368935}
+  - {fileID: 726466464}
+  - {fileID: 251144025}
+  - {fileID: 1535084255}
+  - {fileID: 72525676}
+  TimerText: {fileID: 316639646}
+  gameState: 3
+  gameConfig: {fileID: 11400000, guid: 611fe911a576cd04ea6ac0a68724413e, type: 2}
+  ScoreText: {fileID: 279703788}
+  LivesText: {fileID: 1539279258}
+  GameSaveHandler: {fileID: 1309389389}
+  isTesting: 0
+  testLevel: {fileID: 11400000, guid: 2b9ec032364b14776bcc289934637e20, type: 2}
+--- !u!4 &2087530447
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087530445}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &2100988729 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 836576549491445828, guid: d835c46c3b01c40c388c88e64a9c5f52, type: 3}
@@ -10461,7 +10524,6 @@ GameObject:
   - component: {fileID: 2135858220}
   - component: {fileID: 2135858223}
   - component: {fileID: 2135858224}
-  - component: {fileID: 2135858221}
   - component: {fileID: 2135858222}
   m_Layer: 0
   m_Name: GamePlay
@@ -10485,37 +10547,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2135858221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2135858219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cfafa2a55a324de2a7aa0a5527ea94c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MoleParent: {fileID: 1707156042}
-  HolesVisuals:
-  - {fileID: 1370330350}
-  - {fileID: 691611930}
-  - {fileID: 267752222}
-  - {fileID: 696506770}
-  - {fileID: 2131368935}
-  - {fileID: 726466464}
-  - {fileID: 251144025}
-  - {fileID: 1535084255}
-  - {fileID: 72525676}
-  TimerText: {fileID: 316639646}
-  gameState: 3
-  gameConfig: {fileID: 11400000, guid: 611fe911a576cd04ea6ac0a68724413e, type: 2}
-  ScoreText: {fileID: 279703788}
-  LivesText: {fileID: 1539279258}
-  GameSaveHandler: {fileID: 1309389389}
-  isTesting: 0
-  testLevel: {fileID: 11400000, guid: 2b9ec032364b14776bcc289934637e20, type: 2}
 --- !u!114 &2135858222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10548,7 +10579,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainMenuParent: {fileID: 1583326012}
-  LevelManager: {fileID: 2135858221}
+  LevelManager: {fileID: 2087530446}
   GameEndPopup: {fileID: 638830473}
   levelDataProvder: {fileID: 2135858224}
   SaveHandler: {fileID: 1309389389}
@@ -10996,3 +11027,4 @@ SceneRoots:
   - {fileID: 1309389390}
   - {fileID: 1107930848}
   - {fileID: 1994260784}
+  - {fileID: 2087530447}

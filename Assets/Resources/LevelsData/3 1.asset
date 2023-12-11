@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Index: 301
   NumberOfHoles: 6
-  MolePrefab: {fileID: 9152982342112070331, guid: 4e1eb655dec8548a29d3e3219b8d841f, type: 3}
+  PrefabType: 1
   Score: 1
   Damage: 1
   AnimationClipId: 
