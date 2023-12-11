@@ -218,13 +218,9 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         if (ShowGameTimer)
         {
             StartTimeDuration -= Time.deltaTime;
-            if (StartTimeDuration > 2)
-                TimerText.text = string.Format(gameState == GameState.PAUSED? RESUME_TIMER_TEXT_FORMAT:START_TIMER_TEXT_FORMAT, 3);
-            else if (StartTimeDuration > 1)
-                TimerText.text = string.Format(gameState == GameState.PAUSED ? RESUME_TIMER_TEXT_FORMAT : START_TIMER_TEXT_FORMAT, 2);
-            else if (StartTimeDuration > 0)
-                TimerText.text = string.Format(gameState == GameState.PAUSED ? RESUME_TIMER_TEXT_FORMAT : START_TIMER_TEXT_FORMAT, 1);
-            else
+            if(StartTimeDuration > 0)
+                 TimerText.text = string.Format(gameState == GameState.PAUSED? RESUME_TIMER_TEXT_FORMAT:START_TIMER_TEXT_FORMAT, Math.Ceiling(StartTimeDuration));
+           else
             {
                 ShowGameTimer = false;
                 gameState = GameState.RUNNING;
