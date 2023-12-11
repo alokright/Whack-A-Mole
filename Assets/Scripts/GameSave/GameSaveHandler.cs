@@ -43,12 +43,7 @@ public class GameSaveHandler : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        Dictionary<string, object> data = new Dictionary<string, object>();
-            foreach (var providers in DataProviders)
-                data = ((ISaveGameState)providers).SaveGameData(data);
-
-            PlayerDataManager.Instance.SaveGameData(JsonConvert.SerializeObject(data));
-      
+        SaveData();
     }
 #endif
     public void SaveData()

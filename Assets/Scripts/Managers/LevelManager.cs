@@ -60,32 +60,28 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     public void LoadLevel(LevelData level)
     {
         CurrentScore = 0;
-        repeatCount = level.MaxScore+level.MaxLives;
-        ScoreToWin = level.MaxScore;
         HoleIndex = 0;
-        HoleSequence = GenerateNonAdjacentSequence(level.NumberOfHoles, level.MaxScore+level.MaxLives+1);
-        for (int i = 0; i < HolesVisuals.Count; i++)
-            HolesVisuals[i].SetActive(i< level.NumberOfHoles);
-        MaxLives = level.MaxLives;
         LivesConsumed = 0;
-        gameState = GameState.RUNNING;
-        LivesText.text = string.Format(HUD_TEXT_FORMAT, MaxLives-LivesConsumed, MaxLives);
-        ScoreText.text = string.Format(HUD_TEXT_FORMAT, CurrentScore, ScoreToWin);
-        CurrentLevelId = level.Index;
-        currentLevel = level;
+
+        InitializeLevel(level);
+    }
+    
+    public void ReloadLevel(LevelData level)
+    {
+        InitializeLevel(level);
     }
 
-    public void ReloadLevel(LevelData level)
+    private void InitializeLevel(LevelData level)
     {
         repeatCount = level.MaxScore + level.MaxLives;
         ScoreToWin = level.MaxScore;
-        HoleIndex = 0;
         HoleSequence = GenerateNonAdjacentSequence(level.NumberOfHoles, level.MaxScore + level.MaxLives + 1);
         for (int i = 0; i < HolesVisuals.Count; i++)
             HolesVisuals[i].SetActive(i < level.NumberOfHoles);
         MaxLives = level.MaxLives;
+        gameState = GameState.RUNNING;
         LivesText.text = string.Format(HUD_TEXT_FORMAT, MaxLives - LivesConsumed, MaxLives);
-        ScoreText.text = string.Format(HUD_TEXT_FORMAT, CurrentScore,ScoreToWin);
+        ScoreText.text = string.Format(HUD_TEXT_FORMAT, CurrentScore, ScoreToWin);
         CurrentLevelId = level.Index;
         currentLevel = level;
     }
