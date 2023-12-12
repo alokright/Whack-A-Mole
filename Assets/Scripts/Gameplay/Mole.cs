@@ -22,7 +22,6 @@ public class Mole : MonoBehaviour
     {
         moleLayerMask = LayerMask.GetMask("Mole");
         mainCamera = Camera.main;
-       
     }
 
     private void OnEnable()
@@ -46,8 +45,6 @@ public class Mole : MonoBehaviour
 
     IEnumerator StartMoving()
     {
-        if(gameConfig == null)
-            gameConfig = Resources.Load<GameConfig>("GameConfig");
         transform.localPosition = gameConfig.MoleHidePosition;
         Vector3 to = gameConfig.MoleShowPosition;
         float elapsedTime = 0f;
@@ -88,8 +85,9 @@ public class Mole : MonoBehaviour
     }
 
     private static int debugCount = 0;
-    public void ShowMole(float moveDuration, float aliveTime)
+    public void ShowMole(GameConfig config, float moveDuration, float aliveTime)
     {
+        gameConfig = config;
         if (IsGameOver)
             return;
         IsAlive = true;

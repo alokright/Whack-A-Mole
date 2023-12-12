@@ -40,10 +40,6 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     private float maxSpawnWait;
     private LevelData currentLevel;
 
-    private void Start()
-    {
-        gameConfig = Resources.Load<GameConfig>("GameConfig");
-    }
     private void OnEnable()
     {
         EventManager.GameActionEvents.OnMoleKilled += OnMoleKilled;
@@ -104,7 +100,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
 
         if (moleScript != null)
         {
-            moleScript.ShowMole(currentLevel.MoleMovementDuration, currentLevel.MoleAliveDuration);
+            moleScript.ShowMole(gameConfig, currentLevel.MoleMovementDuration, currentLevel.MoleAliveDuration);
         }
         Debug.Log("currentLevel.MoleMovementDuration"+ currentLevel.MoleMovementDuration + " currentLevel.MoleAliveDuration "+ currentLevel.MoleAliveDuration);
         SetupMoleSpawn();
@@ -148,7 +144,7 @@ public class LevelManager : MonoBehaviour,ISaveGameState
     IEnumerator DelayedShowMole(Mole mole, float delay)
     {
         yield return new WaitForSeconds(delay);
-        mole.ShowMole(currentLevel.MoleMovementDuration, currentLevel.MoleAliveDuration);
+        mole.ShowMole(gameConfig, currentLevel.MoleMovementDuration, currentLevel.MoleAliveDuration);
     }
     IEnumerator RepeatedlyShowMoles()
     {
@@ -215,12 +211,8 @@ public class LevelManager : MonoBehaviour,ISaveGameState
         if (ShowGameTimer)
         {
             StartTimeDuration -= Time.deltaTime;
-            if (StartTimeDuration > 2)
-                TimerText.text = string.Format(gameState == GameState.PAUSED? RESUME_TIMER_TEXT_FORMAT:START_TIMER_TEXT_FORMAT, 3);
-            else if (StartTimeDuration > 1)
-                TimerText.text = string.Format(gameState == GameState.PAUSED ? RESUME_TIMER_TEXT_FORMAT : START_TIMER_TEXT_FORMAT, 2);
-            else if (StartTimeDuration > 0)
-                TimerText.text = string.Format(gameState == GameState.PAUSED ? RESUME_TIMER_TEXT_FORMAT : START_TIMER_TEXT_FORMAT, 1);
+            if (StartTimeDuration > 0)
+                TimerText.text = string.Format(gameState == GameState.PAUSED ? RESUME_TIMER_TEXT_FORMAT : START_TIMER_TEXT_FORMAT, Math.Ceiling(StartTimeDuration));
             else
             {
                 ShowGameTimer = false;
